@@ -10,7 +10,7 @@ diff -ruN gg-0.2.2.1.org/src/callbacks.c gg-0.2.2.1/src/callbacks.c
 -				    kontakt->uin);
 +		if (getenv("CONFIG_DIR"))
 +		    path = g_strdup_printf("%s/%s/gg/history/%d",
-+			getnev("HOME"), getenv("CONFIG_DIR"), kontakt->uin);
++			getenv("HOME"), getenv("CONFIG_DIR"), kontakt->uin);
 +		else
 +		    path = g_strdup_printf("%s/.gg/history/%d",
 +			getenv("HOME"), kontakt->uin);
@@ -65,7 +65,7 @@ diff -ruN gg-0.2.2.1.org/src/main.c gg-0.2.2.1/src/main.c
  
 -	path = g_strconcat(getenv("HOME"), "/.gg/userlist", NULL);
 +	if (getenv("CONFIG_DIR"))
-+	    path = g_strconcat(getenv("HOME"), "/", getenv("CONFIG_DIR", "/gg/userlist", NULL);
++	    path = g_strconcat(getenv("HOME"), "/", getenv("CONFIG_DIR"), "/gg/userlist", NULL);
 +	else
 +	    path = g_strconcat(getenv("HOME"), "/.gg/userlist", NULL);
  
