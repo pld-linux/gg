@@ -1,4 +1,4 @@
-Summary:	GNU Gadu - wolne gadanie
+Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.1.pre6
@@ -18,7 +18,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_prefix		/usr/X11R6
 
 %description
-Klient Gadu-Gadu na licencji GNU/GPL.
+Gadu-Gadu client released on GNU/GPL.
 
 %description -l pl
 Klient Gadu-Gadu na licencji GNU/GPL.
@@ -40,7 +40,7 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/gg.deskto
 gzip -9nf README ChangeLog
 
 %clean
-#rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
