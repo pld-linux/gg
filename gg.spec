@@ -99,8 +99,8 @@ Gadu-Gadu client released on GNU/GPL. GNOME dockable version
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla gnome.
 
 %package wm-applet
-Summary:	GNU Gadu - free talking - WindowMaker dockable version.
-Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla WindowMaker'a.
+Summary:	GNU Gadu - free talking - WindowMaker dockable version
+Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla WindowMaker'a
 Group:		Applications/Communications
 PreReq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
@@ -113,8 +113,8 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla
 WindowMaker'a.
 
 %package kde
-Summary:	GNU Gadu - free talking - KDE version.
-Summary(pl):	GNU Gadu - wolne gadanie - wersja dla KDE.
+Summary:	GNU Gadu - free talking - KDE version
+Summary(pl):	GNU Gadu - wolne gadanie - wersja dla KDE
 Group:		Applications/Communications
 PreReq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
