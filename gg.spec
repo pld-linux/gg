@@ -1,16 +1,15 @@
 Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
-Version:	0.2.0
-Release:	6
+Version:	0.2.1
+Release:	0.pre4
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
 Group(de):	Applikationen/Kommunikation
 Group(pl):	Aplikacje/Komunikacja
-Source0:	http://netkrab.slackware.pl/gg/%{name}-%{version}.tar.gz
+Source0:	http://netkrab.slackware.pl/gg/%{name}-%{version}pre4.tar.gz
 Source2:	%{name}.png
-Source3:	GnuGadu.gnorba
 Icon:		gg.xpm
 URL:		http://netkrab.slackware.pl/gg/
 BuildRequires:	gtk+-devel > 1.2.8
@@ -90,7 +89,7 @@ Gadu-Gadu client released on GNU/GPL. GNOME dockable version
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla gnome.
 
 %prep
-%setup  -q
+%setup  -q -n %{name}-%{version}pre4
 
 %build
 LDFLAGS=" -L%{_libdir} %{rpmldflags}"
@@ -122,8 +121,6 @@ cat src/GnuGadu.desktop | sed -e 's/xpm$/png/' > $RPM_BUILD_ROOT%{_applnkdir}/Ne
 cat src/GnuGadu.desktop | sed -e 's/xpm$/png/' | sed -e 's/Exec=gg/Exec=gg_applet\ --activate-goad-server=gg/' > $RPM_BUILD_ROOT%{_datadir}/applets/Network/GnuGadu.desktop
 
 install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/CORBA/servers/
-install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/CORBA/servers/
 
 gzip -9nf README ChangeLog TODO
 
