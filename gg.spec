@@ -2,7 +2,7 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.2.0
-Release:	4
+Release:	5
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
@@ -139,10 +139,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files gnome
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/gg_applet
+%attr(755,root,root) %{_bindir}/gg_gnome
 %{_applnkdir}/Network/Communications/GnuGadu.desktop
 
 %files gnome-applet
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/gg_gnome
+%attr(755,root,root) %{_bindir}/gg_applet
 %attr(755,root,root) %{_datadir}/applets/Network/GnuGadu.desktop
