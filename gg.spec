@@ -7,7 +7,6 @@
 # _without_wm_applet
 # _without_sound
 
-
 # This looks like overkill but some day we might have *everything* bconded :)
 %{!?_without_gnome: 		%define _need_gnome	1}
 %{!?_without_gnome:         %define _need_esd   1}
@@ -16,12 +15,11 @@
 %{!?_without_kde:			%define _need_arts	1}
 %{!?_without_wm_applet:		%define _need_esd	1}
 
-
 Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.2.4
-Release:	2
+Release:	3
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
@@ -30,13 +28,13 @@ Source1:	%{name}.png
 Patch0:		%{name}-lupa.patch
 Icon:		gg.xpm
 URL:		http://netkrab.slackware.pl/gg/
-BuildRequires:					gtk+-devel > 1.2.8
-%{?_need_gnome:BuildRequires:	gnome-libs-devel}
-%{?_need_gnome:BuildRequires:	gnome-core-devel}
-%if %{!?_without_sound:1}%{?_without_sound:0}
 %{?_need_arts:BuildRequires:	arts-devel}
+%if %{!?_without_sound:1}%{?_without_sound:0}
 %{?_need_esd:BuildRequires:		esound-devel > 0.2.7}
 %endif
+%{?_need_gnome:BuildRequires:	gnome-libs-devel}
+%{?_need_gnome:BuildRequires:	gnome-core-devel}
+BuildRequires:					gtk+-devel > 1.2.8
 
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
