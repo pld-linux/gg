@@ -2,7 +2,7 @@ Summary:	GNU Gadu - wolne gadanie
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.1.pre6
-Release:	1
+Release:	2
 License:	GPL
 Group:          Applications/Communications
 Group(de):      Applikationen/Kommunikation
@@ -11,6 +11,8 @@ Source0:	http://netkrab.slackware.pl/gg/%{name}-%{version}.tar.gz
 Source1:	%{name}.desktop
 Icon:		gg.xpm
 URL:		http://netkrab.slackware.pl/gg/
+BuildRequires:	gtk+-devel > 1.2.8
+BuildRequires:	esound-devel > 0.2.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_prefix		/usr/X11R6
@@ -38,10 +40,11 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/gg.deskto
 gzip -9nf README ChangeLog
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+#rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg
 %{_datadir}/gg/pixmaps/*
+%{_datadir}/gg/sounds/*
 %{_applnkdir}/Network/Communications/gg.desktop
