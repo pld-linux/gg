@@ -66,7 +66,7 @@ cat %{SOURCE1} | sed -e 's/Exec=gg/Exec=gnu_gadu_applet/' > $RPM_BUILD_ROOT%{_da
 
 install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
 
-gzip -9nf README ChangeLog
+gzip -9nf README ChangeLog TODO
 
 %clean
 rm -rf $RPM_BUILD_ROOT
