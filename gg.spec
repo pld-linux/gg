@@ -22,7 +22,7 @@ Release:	3
 Epoch:		5
 License:	GPL
 Group:		Applications/Communications
-Source0:	http://dl.sf.net/ggadu/%{name}-%{version}.tar.gz
+Source0:	http://dl.sourceforge.net/ggadu/%{name}-%{version}.tar.gz
 # Source0-md5:	7b32d4c866ef59dfe22373a83b1a9a2a
 Source1:	%{name}.png
 Source2:	%{name}_gnome.desktop
