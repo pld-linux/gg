@@ -4,13 +4,14 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.2.2.1
-Release:	1
+Release:	2
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
 #Source0:	ftp://ftp.slackware.pl/gg/%{name}-%{version}.tar.gz
 Source0:	ftp://ftp.slackware.pl/gg/gg-0.2.2.1.tar.gz
 Source2:	%{name}.png
+Patch0:		gg-homedir.patch
 Icon:		gg.xpm
 URL:		http://netkrab.slackware.pl/gg/
 BuildRequires:	gtk+-devel > 1.2.8
@@ -45,7 +46,7 @@ Klient Gadu-Gadu na licencji GNU/GPL.
 Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Group:		Applications/Communications
-Prereq:		%{name}-common = %{epoch}:%{version}
+PreReq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
 
 %description X11
@@ -58,7 +59,7 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla X11.
 Summary:	GNU Gadu - free talking - GNOME version
 Summary(pl):	GNU Gadu - wolne gadanie - wersja dla GNOME
 Group:		Applications/Communications
-Prereq:		%{name}-common = %{epoch}:%{version}
+PreReq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
 
 %description gnome
@@ -71,7 +72,7 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla GNOME.
 Summary:	GNU Gadu - free talking - GNOME dockable version
 Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla GNOME
 Group:		Applications/Communications
-Prereq:		%{name}-common = %{epoch}:%{version}
+PreReq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
 
 %description gnome-applet
@@ -84,7 +85,7 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla gnome.
 Summary:	GNU Gadu - free talking - WindowMaker dockable version.
 Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla WindowMaker'a.
 Group:		Applications/Communications
-Prereq:		%{name}-common = %{epoch}:%{version}
+PreReq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
 
 %description wm-applet
@@ -98,7 +99,7 @@ WindowMaker'a.
 Summary:	GNU Gadu - free talking - KDE version.
 Summary(pl):	GNU Gadu - wolne gadanie - wersja dla KDE.
 Group:		Applications/Communications
-Prereq:		%{name}-common = %{epoch}:%{version}
+PreReq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
 
 %description kde
@@ -109,6 +110,7 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla KDE.
 
 %prep
 %setup -q -n %{name}-%{version}
+%patch0 -p1
 
 %build
 LDFLAGS=" -L%{_libdir} %{rpmldflags}"
