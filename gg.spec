@@ -19,8 +19,8 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	1.0.0
-%define		_pre	rc1
-Release:	0.%{_pre}.0.4
+%define		_pre	rc2
+Release:	0.%{_pre}.0.1
 Epoch:		5
 License:	GPL
 Group:		Applications/Communications
@@ -36,10 +36,12 @@ URL:		http://gadu.gnu.pl
 %{?_need_gnome:BuildRequires:	gnome-libs-devel}
 %{?_need_gnome:BuildRequires:	gnome-core-devel}
 BuildRequires:	gtk+-devel > 1.2.8
+BuildRequires:	xmms-devel
 
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/X11/GNOME
+%define 	_prefix			/usr/X11R6
 
 %description
 Gadu-Gadu client released on GNU/GPL.
