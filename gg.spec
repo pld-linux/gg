@@ -19,12 +19,16 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	1.0.0
-Release:	1
+Release:	1.1
 Epoch:		5
 License:	GPL
 Group:		Applications/Communications
 Source0:	ftp://ftp.slackware.pl/pub/gg/%{name}-%{version}.tar.gz
 Source1:	%{name}.png
+Source2:	%{name}_gnome.desktop
+Source3:	%{name}_gnome_applet.desktop
+Source4:	%{name}_WM_applet.desktop
+Source5:	%{name}_KDE.desktop
 Icon:		gg.xpm
 URL:		http://gadu.gnu.pl
 %{?_need_arts:BuildRequires:	arts-devel}
@@ -192,37 +196,16 @@ sed -e 's/xpm$/png/' -e 's/Exec=gg/Exec=gg_applet\ --activate-goad-server=gg/' \
 	src/GnuGadu.desktop > $RPM_BUILD_ROOT%{_datadir}/applets/Network/GnuGadu.desktop
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_pixmapsdir}
+install %{SOURCE2} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu_gnome.desktop
+install %{SOURCE3} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu_gnome_applet.desktop
+install %{SOURCE4} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu_WM_applet.desktop
+install %{SOURCE5} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu_KDE.desktop
 
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/CORBA/servers/
 install src/GnuGadu.gnorba $RPM_BUILD_ROOT%{_sysconfdir}/CORBA/servers/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-
-%post gnome
-if [ ! -e /usr/X11R6/bin/gg ]; then
-	ln -sf /usr/X11R6/bin/gg_gnome /usr/X11R6/bin/gg
-fi
-
-%post gnome-applet
-if [ ! -e /usr/X11R6/bin/gg ]; then
-	ln -sf /usr/X11R6/bin/gg_applet /usr/X11R6/bin/gg
-fi
-
-%post wm-applet
-if [ ! -e /usr/X11R6/bin/gg ]; then
-	ln -sf /usr/X11R6/bin/gg_wm /usr/X11R6/bin/gg
-fi
-
-%post kde
-if [ ! -e /usr/X11R6/bin/gg ]; then
-	ln -sf /usr/X11R6/bin/gg_kde /usr/X11R6/bin/gg
-fi
-
-%postun
-if [ -L /usr/X11R6/bin/gg ]; then
-	rm -f /usr/X11R6/bin/gg
-fi
 
 %files common
 %defattr(644,root,root,755)
@@ -239,14 +222,14 @@ fi
 %files gnome
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_gnome
-%{_applnkdir}/Network/Communications/GnuGadu.desktop
+%{_applnkdir}/Network/Communications/GnuGadu_gnome.desktop
 %endif
 
 %if %{!?_without_gnome_applet:1}%{?_without_gnome_applet:0}
 %files gnome-applet
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_applet
-%{_datadir}/applets/Network/GnuGadu.desktop
+%{_datadir}/applets/Network/GnuGadu_gnome_applet.desktop
 %{_sysconfdir}/CORBA/servers/GnuGadu.gnorba
 %endif
 
@@ -254,12 +237,12 @@ fi
 %files wm-applet
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_wm
-%{_datadir}/applets/Network/GnuGadu.desktop
+%{_datadir}/applets/Network/GnuGadu_WM_applet.desktop
 %endif
 
 %if %{!?_without_kde:1}%{?_without_kde:0}
 %files kde
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_kde
-%{_applnkdir}/Network/Communications/GnuGadu.desktop
+%{_applnkdir}/Network/Communications/GnuGadu_KDE.desktop
 %endif
