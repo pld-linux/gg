@@ -4,7 +4,7 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.2.2.1
-Release:	3
+Release:	4
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
@@ -133,7 +133,9 @@ mv -f src/gg src/gg_wm
 %{__make} clean
 
 %configure \
-	--enable-docklet
+	--enable-docklet \
+	--enable-arts \
+	--disable-esd
 %{__make}
 mv -f src/gg src/gg_kde
 %{__make} clean
