@@ -15,8 +15,6 @@
 %{!?_without_wm_applet:		%define _need_esd	1}
 
 
-%define		_release	3
-
 Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
