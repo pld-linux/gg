@@ -193,7 +193,6 @@ sed -e 's/xpm$/png/' -e 's/Exec=gg/Exec=gg_applet\ --activate-goad-server=gg/' \
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_pixmapsdir}
 
-gzip -9nf README ChangeLog TODO
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/CORBA/servers/
 install src/GnuGadu.gnorba $RPM_BUILD_ROOT%{_sysconfdir}/CORBA/servers/
 
@@ -227,7 +226,7 @@ fi
 
 %files common
 %defattr(644,root,root,755)
-%doc *.gz
+%doc README ChangeLog TODO
 %{_datadir}/gg
 %{_pixmapsdir}/*
 
