@@ -1,0 +1,78 @@
+diff -Nur gg-0.2.2.1.orig/src/callbacks.c gg-0.2.2.1/src/callbacks.c
+--- gg-0.2.2.1.orig/src/callbacks.c	Wed May  1 10:07:08 2002
++++ gg-0.2.2.1/src/callbacks.c	Wed May 29 10:34:36 2002
+@@ -408,7 +408,7 @@
+ 		gchar *path;
+ 
+ 		path =
+-		    g_strdup_printf("%s/.gg/history/%d", getenv("HOME"),
++		    g_strdup_printf("%s/etc/gg/history/%d", getenv("HOME"),
+ 				    kontakt->uin);
+ 		fp = fopen(path, "r");
+ 		if (fp) {
+diff -Nur gg-0.2.2.1.orig/src/gg.c gg-0.2.2.1/src/gg.c
+--- gg-0.2.2.1.orig/src/gg.c	Fri Apr 19 16:04:50 2002
++++ gg-0.2.2.1/src/gg.c	Wed May 29 10:34:53 2002
+@@ -407,12 +407,12 @@
+ 	gchar *path, *timestamp, *lognick;
+ 	FILE *fp;
+ 
+-	path = g_strdup_printf("%s/.gg/history", getenv("HOME"));
++	path = g_strdup_printf("%s/etc/gg/history", getenv("HOME"));
+ 	mkdir(path, 0755);
+ 	g_free(path);
+ 
+ 	path =
+-	    g_strdup_printf("%s/.gg/history/%d", getenv("HOME"), sess_uin);
++	    g_strdup_printf("%s/etc/gg/history/%d", getenv("HOME"), sess_uin);
+ 	fp = fopen(path, "a");
+ 	g_free(path);
+ 
+diff -Nur gg-0.2.2.1.orig/src/main.c gg-0.2.2.1/src/main.c
+--- gg-0.2.2.1.orig/src/main.c	Mon Apr 22 11:59:01 2002
++++ gg-0.2.2.1/src/main.c	Wed May 29 10:36:11 2002
+@@ -80,7 +80,7 @@
+ 	FILE *fp;
+ 	GList *tmplist;
+ 
+-	path = g_strconcat(g_get_home_dir(), "/.gg/userlist", NULL);
++	path = g_strconcat(g_get_home_dir(), "/etc/gg/userlist", NULL);
+ 
+ 	fp = fopen(path, "w");
+ 
+@@ -139,7 +139,7 @@
+ 	}
+ 	gtk_clist_clear(GTK_CLIST(lista));
+ 
+-	path = g_strconcat(getenv("HOME"), "/.gg/userlist", NULL);
++	path = g_strconcat(getenv("HOME"), "/etc/gg/userlist", NULL);
+ 
+ 	fp = fopen(path, "r");
+ 
+@@ -271,7 +271,7 @@
+  	config.save_contacts_on_exit = 1;
+ 	config.server = g_strdup(GG_DEFAULT_HOST);
+ 		
+-	path = g_strconcat(getenv("HOME"), "/.gg/config", NULL);
++	path = g_strconcat(getenv("HOME"), "/etc/gg/config", NULL);
+ 
+ 	g_list_free(ignore);
+ 
+@@ -431,7 +431,7 @@
+ 	    config.width=window->allocation.width;
+ 	    config.height=window->allocation.height;
+ 	}
+-	path = g_strconcat(getenv("HOME"), "/.gg/config", NULL);
++	path = g_strconcat(getenv("HOME"), "/etc/gg/config", NULL);
+ 
+ 	fp = fopen(path, "w");
+ 
+@@ -574,7 +574,7 @@
+ #endif
+ 	gchar *path = NULL;
+ 
+-	path = g_strconcat(getenv("HOME"), "/.gg", NULL);
++	path = g_strconcat(getenv("HOME"), "/etc/gg", NULL);
+ 	mkdir(path, 0755);
+ 	g_free(path);
+ 
