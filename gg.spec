@@ -4,11 +4,11 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.2.2
-Release:	%{_release}.pre5
+Release:	%{_release}.pre6
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
-Source0:	http://netkrab.slackware.pl/gg/%{name}-%{version}pre5.tar.gz
+Source0:	http://netkrab.slackware.pl/gg/%{name}-%{version}pre6.tar.gz
 Source2:	%{name}.png
 Icon:		gg.xpm
 URL:		http://netkrab.slackware.pl/gg/
@@ -107,7 +107,7 @@ Gadu-Gadu client released on GNU/GPL. KDE version
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla KDE.
 
 %prep
-%setup -q -n %{name}-%{version}pre5
+%setup -q -n %{name}-%{version}pre6
 
 %build
 LDFLAGS=" -L%{_libdir} %{rpmldflags}"
