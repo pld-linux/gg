@@ -1,11 +1,10 @@
-#
 # Conditional build:
 #
-# _without_gnome
-# _without_gnome_applet
-# _without_kde
-# _without_wm_applet
-# _without_sound
+# _without_gnome	- don't build with Gnome
+# _without_gnome_applet	- don't build Gnome applet
+# _without_kde		- don't build KDE applet
+# _without_wm_applet	- don't build WM applet
+# _without_sound	- disable sound support
 
 # This looks like overkill but some day we might have *everything* bconded :)
 %{!?_without_gnome:%define _need_gnome	1}
@@ -19,7 +18,7 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	1.0.0
-Release:	1.2
+Release:	2
 Epoch:		5
 License:	GPL
 Group:		Applications/Communications
@@ -29,7 +28,7 @@ Source2:	%{name}_gnome.desktop
 Source3:	%{name}_WM_applet.desktop
 Source4:	%{name}_KDE.desktop
 Icon:		gg.xpm
-URL:		http://gadu.gnu.pl
+URL:		http://gadu.gnu.pl/
 %{?_need_arts:BuildRequires:	arts-devel}
 %if %{!?_without_sound:1}%{?_without_sound:0}
 %{?_need_esd:BuildRequires:		esound-devel > 0.2.7}
@@ -213,8 +212,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files X11
 %defattr(644,root,root,755)
-%{_applnkdir}/Network/Communications/GnuGadu.desktop
 %attr(755,root,root) %{_bindir}/gg
+%{_applnkdir}/Network/Communications/GnuGadu.desktop
 
 %if %{!?_without_gnome:1}%{?_without_gnome:0}
 %files gnome
