@@ -1,9 +1,9 @@
 Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
-Version:	0.1.2
+Version:	0.2.pre2
 Release:	1
-Epoch:		1
+Epoch:		2
 License:	GPL
 Group:          Applications/Communications
 Group(de):      Applikationen/Kommunikation
@@ -25,20 +25,41 @@ Gadu-Gadu client released on GNU/GPL.
 %description -l pl
 Klient Gadu-Gadu na licencji GNU/GPL.
 
+%package gnome
+Summary:	GNU Gadu - free talking - gnome dockable
+Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla gnome
+Group(de):      Applikationen/Kommunikation
+Group(pl):      Aplikacje/Komunikacja
+
+%description gnome
+Gadu-Gadu client released on GNU/GPL. Gnome dockable version
+
+%description -l pl gnome
+Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla gnome.
+
 %prep
 %setup  -q
 
 %build
+LDFLAGS=" -L/usr/X11R6/lib "
+%configure --enable-gnome --enable-panel
+%{__make}
+mv src/gg src/gnu_gadu_applet
+%{__make} clean
+
 %configure
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_applnkdir}/Network/Communications,%{_pixmapsdir}}
+install -d $RPM_BUILD_ROOT{%{_applnkdir}/Network/Communications,%{_pixmapsdir},%{_datadir}/applets/Network/}
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
+install src/gnu_gadu_applet $RPM_BUILD_ROOT%{_bindir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/gg.desktop
+cat %{SOURCE1} | sed -e 's/Exec=gg/Exec=gnu_gadu_applet/' > $RPM_BUILD_ROOT%{_datadir}/applets/Network/gnu_gadu_applet.desktop
+
 install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
 
 gzip -9nf README ChangeLog
@@ -52,4 +73,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gg
 %{_datadir}/gg
 %{_applnkdir}/Network/Communications/gg.desktop
+%{_pixmapsdir}/*
+
+%files gnome
+%defattr(644,root,root,755)
+%doc *.gz
+%attr(755,root,root) %{_bindir}/gnu_gadu_applet
+%{_datadir}/gg
+%{_datadir}/applets/Network/gnu_gadu_applet.desktop
 %{_pixmapsdir}/*
