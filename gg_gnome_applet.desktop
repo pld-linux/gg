@@ -1,9 +1,9 @@
 [Desktop Entry]
-Name=GNU Gadu
-Name[pl]=GNU Gadu
-Comment=GNU Gadu free Gadu-Gadu(tm) client
-Comment[pl]=GNU Gadu - wolne gadanie.
-Exec=gg
+Name=Gnome applet GNU Gadu
+Name[pl]=Gnome applet GNU Gadu
+Comment=GNU Gadu free Gadu-Gadu(tm) client. Gnome applet version
+Comment[pl]=GNU Gadu - wolne gadanie. Wersja appleta Gnome.
+Exec=gg_applet
 Icon=gg.xpm
 Terminal=0
 Type=Application

@@ -1,9 +1,9 @@
 [Desktop Entry]
-Name=GNU Gadu
-Name[pl]=GNU Gadu
-Comment=GNU Gadu free Gadu-Gadu(tm) client
-Comment[pl]=GNU Gadu - wolne gadanie.
-Exec=gg
+Name=WM GNU Gadu
+Name[pl]=WM GNU Gadu
+Comment=GNU Gadu free Gadu-Gadu(tm) client. WM version.
+Comment[pl]=GNU Gadu - wolne gadanie. Wersja WM.
+Exec=gg_wm
 Icon=gg.xpm
 Terminal=0
 Type=Application
