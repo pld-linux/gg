@@ -1,0 +1,91 @@
+diff -Nur gg-0.2.1.orig/src/gg-types.h gg-0.2.1/src/gg-types.h
+--- gg-0.2.1.orig/src/gg-types.h	Thu Jan 10 00:53:44 2002
++++ gg-0.2.1/src/gg-types.h	Thu Jan 17 17:10:00 2002
+@@ -45,6 +45,8 @@
+ 	gchar *proxy_host;
+ 	guint connect_on_start;
+ 	guint last_sysmsg;
++	guint width;
++	guint height;
+ } GGConfig;
+ 
+ typedef struct {
+diff -Nur gg-0.2.1.orig/src/gg.h gg-0.2.1/src/gg.h
+--- gg-0.2.1.orig/src/gg.h	Mon Jan 14 22:43:05 2002
++++ gg-0.2.1/src/gg.h	Thu Jan 17 17:09:25 2002
+@@ -160,6 +160,9 @@
+ #define GG_SEARCH          0x0004
+ #define GG_REGISTER	   0x0005
+ 
++#define GG_MIN_WIDTH   160
++#define GG_MIN_HEIGHT  300
++
+ //unsigned int gg_hash_passwd(unsigned char *passwd, unsigned int seed);
+ 
+ void gg_connect_to_server(void);
+diff -Nur gg-0.2.1.orig/src/interface.c gg-0.2.1/src/interface.c
+--- gg-0.2.1.orig/src/interface.c	Mon Jan 14 22:49:11 2002
++++ gg-0.2.1/src/interface.c	Thu Jan 17 17:11:24 2002
+@@ -145,7 +145,7 @@
+ 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+ #endif
+ 	gtk_object_set_data(GTK_OBJECT(window), "window", window);
+-	gtk_widget_set_usize(window, 160, 300);
++	gtk_widget_set_usize(window, GG_MIN_WIDTH, GG_MIN_HEIGHT);
+ 	gtk_window_set_title(GTK_WINDOW(window), _(TITLE));
+ 
+ #ifdef USE_APPLET
+@@ -452,6 +452,7 @@
+ 	gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
+ #endif
+ 	window_set_icon(window, NULL, GG_ONLINE_MAIN);
++	gtk_window_set_default_size (GTK_WINDOW (window), config.width, config.height);
+ 	return window;
+ }
+ 
+diff -Nur gg-0.2.1.orig/src/main.c gg-0.2.1/src/main.c
+--- gg-0.2.1.orig/src/main.c	Mon Jan 14 22:52:31 2002
++++ gg-0.2.1/src/main.c	Thu Jan 17 17:14:37 2002
+@@ -259,6 +259,8 @@
+ 	config.proxy_port = 8080;
+ 	config.connect_on_start = 1;
+ 	config.last_sysmsg = 0;
++	config.width = GG_MIN_WIDTH;
++	config.height = GG_MIN_HEIGHT;
+ 	
+ 	path = g_strconcat(getenv("HOME"), "/.gg/config", NULL);
+ 
+@@ -353,6 +355,12 @@
+ 		if (g_strncasecmp(line, "last_sysmsg ", 12) == 0) {
+ 			config.last_sysmsg = atoi(line + 12);
+ 		}
++                if (g_strncasecmp(line, "width ", 6) == 0) {                    
++                        config.width = atoi(line + 6);                          
++                }                                                               
++                if (g_strncasecmp(line, "height ", 7) == 0) {                   
++                        config.height = atoi(line + 7);                         
++                }     
+ 	}
+ #ifdef DEBUG
+ 	printf("read_config(): config: %d ********\n", config.uin);
+@@ -366,6 +374,9 @@
+ 	gchar *path;
+ 	GList *tmp_ignore;
+ 
++	config.width=window->allocation.width;
++	config.height=window->allocation.height;
++	
+ 	path = g_strconcat(getenv("HOME"), "/.gg/config", NULL);
+ 
+ 	fp = fopen(path, "w");
+@@ -407,7 +418,9 @@
+ 
+ 	fprintf(fp, "connect_on_start %d\n", config.connect_on_start);
+ 	fprintf(fp, "last_sysmsg %d\n", config.last_sysmsg);
+-
++	fprintf(fp, "width %d\n", config.width);
++	fprintf(fp, "height %d\n", config.height);
++	
+ 	tmp_ignore = ignore;
+ 	while (tmp_ignore) {
+ 		fprintf(fp, "ignore %d\n", *(guint *) tmp_ignore->data);
