@@ -249,20 +249,20 @@ fi
 %files gnome-applet
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_applet
-%attr(755,root,root) %{_datadir}/applets/Network/GnuGadu.desktop
-%attr(755,root,root) %{_sysconfdir}/CORBA/servers/GnuGadu.gnorba
+%{_datadir}/applets/Network/GnuGadu.desktop
+%{_sysconfdir}/CORBA/servers/GnuGadu.gnorba
 %endif
 
 %if %{!?_without_wm_applet:1}%{?_without_wm_applet:0}
 %files wm-applet
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_wm
-%attr(755,root,root) %{_datadir}/applets/Network/GnuGadu.desktop
+%{_datadir}/applets/Network/GnuGadu.desktop
 %endif
 
 %if %{!?_without_kde:1}%{?_without_kde:0}
 %files kde
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_kde
-%attr(755,root,root) %{_datadir}/applets/Network/GnuGadu.desktop
+%{_datadir}/applets/Network/GnuGadu.desktop
 %endif
