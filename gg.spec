@@ -1,19 +1,19 @@
 # Conditional build:
 #
-# _without_gnome	- don't build with GNOME
-# _without_gnome_applet	- don't build GNOME applet
-# _without_kde		- don't build KDE applet
-# _without_wm_applet	- don't build WM applet
-# _without_sound	- disable sound support
-
+%bcond_without	gnome		# don't build with GNOME
+%bcond_without	gnome_applet	# don't build GNOME applet
+%bcond_without	kde		# don't build KDE applet
+%bcond_without	wm_applet	# don't build WM applet
+%bcond_without	sound		# disable sound support
+#
 # This looks like overkill but some day we might have *everything* bconded :)
-%{!?_without_gnome:%define _need_gnome	1}
-%{!?_without_gnome:%define _need_esd   1}
-%{!?_without_gnome_applet:%define	_need_gnome	1}
-%{!?_without_gnome_applet:%define _nees_esd   1}
-%{!?_without_kde:%define _need_arts	1}
-%{!?_without_wm_applet:%define _need_esd	1}
-
+%{?with_gnome:%define		need_gnome	1}
+%{?with_gnome:%define 		need_esd	1}
+%{?with_gnome_applet:%define	need_gnome	1}
+%{?with_gnome_applet:%define 	nees_esd	1}
+%{?with_kde:%define 		need_arts	1}
+%{?with_wm_applet:%define 	need_esd	1}
+#
 Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
@@ -31,15 +31,14 @@ Source4:	%{name}_KDE.desktop
 Patch0:		http://piorun.ds.pg.gda.pl/~blues/patches/gg-debian_fixes.patch
 Icon:		gg.xpm
 URL:		http://gadu.gnu.pl/
-%{?_need_arts:BuildRequires:	arts-devel}
-%if %{!?_without_sound:1}%{?_without_sound:0}
-%{?_need_esd:BuildRequires:		esound-devel > 0.2.7}
+%{?need_arts:BuildRequires:	arts-devel}
+%if %{with sound}
+%{?need_esd:BuildRequires:	esound-devel > 0.2.7}
 %endif
-%{?_need_gnome:BuildRequires:	gnome-libs-devel}
-%{?_need_gnome:BuildRequires:	gnome-core-devel}
+%{?need_gnome:BuildRequires:	gnome-libs-devel}
+%{?need_gnome:BuildRequires:	gnome-core-devel}
 BuildRequires:	gtk+-devel > 1.2.8
 BuildRequires:	xmms-devel
-
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/X11/GNOME
@@ -136,9 +135,9 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla KDE.
 %build
 LDFLAGS=" -L%{_libdir} %{rpmldflags}"
 
-%if %{!?_without_gnome_applet:1}%{?_without_gnome_applet:0}
+%if %{with gnome_applet}
 %configure \
-	%{?_without_sound:--disable-esd} \
+	%{!?with_sound:--disable-esd} \
 	--enable-gnome \
 	--enable-panel \
 	--enable-xmms
@@ -147,9 +146,9 @@ mv -f src/gg src/gg_applet
 %{__make} clean
 %endif
 
-%if %{!?_without_gnome:1}%{?_without_gnome:0}
+%if %{with gnome}
 %configure \
-	%{?_without_sound:--disable-esd} \
+	%{!?with_sound:--disable-esd} \
 	--enable-gnome \
 	--enable-xmms
 %{__make}
@@ -157,9 +156,9 @@ mv -f src/gg src/gg_gnome
 %{__make} clean
 %endif
 
-%if %{!?_without_wm_applet:1}%{?_without_wm_applet:0}
+%if %{with wm_applet}
 %configure \
-	%{?_without_sound:--disable-esd} \
+	%{!?with_sound:--disable-esd} \
 	--enable-dockapp \
 	--enable-xmms
 %{__make}
@@ -167,10 +166,10 @@ mv -f src/gg src/gg_wm
 %{__make} clean
 %endif
 
-%if %{!?_without_kde:1}%{?_without_kde:0}
+%if %{with kde}
 %configure \
 	--enable-docklet \
-	%{!?_without_sound:--enable-arts} \
+	%{?with_sound:--enable-arts} \
 	--disable-esd \
 	--enable-xmms
 %{__make}
@@ -178,7 +177,7 @@ mv -f src/gg src/gg_kde
 %{__make} clean
 %endif
 
-%configure %{?_without_sound:--disable-esd} --enable-xmms
+%configure %{!?with_sound:--disable-esd} --enable-xmms
 %{__make}
 
 %install
@@ -189,10 +188,10 @@ install -d $RPM_BUILD_ROOT{%{_applnkdir}/Network/Communications,%{_datadir}/appl
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%{!?_without_gnome_applet:install src/gg_applet $RPM_BUILD_ROOT%{_bindir}}
-%{!?_without_gnome:install src/gg_gnome $RPM_BUILD_ROOT%{_bindir}}
-%{!?_without_wm_applet:install src/gg_wm $RPM_BUILD_ROOT%{_bindir}}
-%{!?_without_kde:install src/gg_kde $RPM_BUILD_ROOT%{_bindir}}
+%{?with_gnome_applet:install src/gg_applet $RPM_BUILD_ROOT%{_bindir}}
+%{?with_gnome:install src/gg_gnome $RPM_BUILD_ROOT%{_bindir}}
+%{?with_wm_applet:install src/gg_wm $RPM_BUILD_ROOT%{_bindir}}
+%{?with_kde:install src/gg_kde $RPM_BUILD_ROOT%{_bindir}}
 
 sed -e 's/xpm$/png/' src/GnuGadu.desktop \
 	> $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu.desktop
@@ -219,14 +218,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gg
 %{_applnkdir}/Network/Communications/GnuGadu.desktop
 
-%if %{!?_without_gnome:1}%{?_without_gnome:0}
+%if %{with gnome}
 %files gnome
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_gnome
 %{_applnkdir}/Network/Communications/GnuGadu_gnome.desktop
 %endif
 
-%if %{!?_without_gnome_applet:1}%{?_without_gnome_applet:0}
+%if %{with gnome_applet}
 %files gnome-applet
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_applet
@@ -234,14 +233,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/CORBA/servers/GnuGadu.gnorba
 %endif
 
-%if %{!?_without_wm_applet:1}%{?_without_wm_applet:0}
+%if %{with wm_applet}
 %files wm-applet
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_wm
 %{_datadir}/applets/Network/GnuGadu_WM_applet.desktop
 %endif
 
-%if %{!?_without_kde:1}%{?_without_kde:0}
+%if %{with kde}
 %files kde
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_kde
