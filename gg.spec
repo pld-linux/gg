@@ -18,7 +18,7 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	1.0.0
-Release:	2
+Release:	3
 Epoch:		5
 License:	GPL
 Group:		Applications/Communications
@@ -28,6 +28,7 @@ Source1:	%{name}.png
 Source2:	%{name}_gnome.desktop
 Source3:	%{name}_WM_applet.desktop
 Source4:	%{name}_KDE.desktop
+Patch0:		http://piorun.ds.pg.gda.pl/~blues/patches/gg-debian_fixes.patch
 Icon:		gg.xpm
 URL:		http://gadu.gnu.pl/
 %{?_need_arts:BuildRequires:	arts-devel}
@@ -130,6 +131,7 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla KDE.
 
 %prep
 %setup -q 
+%patch0 -p1
 
 %build
 LDFLAGS=" -L%{_libdir} %{rpmldflags}"
@@ -181,9 +183,12 @@ mv -f src/gg src/gg_kde
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_applnkdir}/Network/Communications,%{_pixmapsdir},%{_datadir}/applets/Network/}
+install -d $RPM_BUILD_ROOT{%{_applnkdir}/Network/Communications,%{_datadir}/applets/Network} \
+	$RPM_BUILD_ROOT{%{_sysconfdir}/CORBA/servers,%{_pixmapsdir}}
 
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
+
 %{!?_without_gnome_applet:install src/gg_applet $RPM_BUILD_ROOT%{_bindir}}
 %{!?_without_gnome:install src/gg_gnome $RPM_BUILD_ROOT%{_bindir}}
 %{!?_without_wm_applet:install src/gg_wm $RPM_BUILD_ROOT%{_bindir}}
@@ -198,8 +203,6 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_pixmapsdir}
 install %{SOURCE2} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu_gnome.desktop
 install %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/applets/Network/GnuGadu_WM_applet.desktop
 install %{SOURCE4} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu_KDE.desktop
-
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/CORBA/servers/
 install src/GnuGadu.gnorba $RPM_BUILD_ROOT%{_sysconfdir}/CORBA/servers/
 
 %clean
