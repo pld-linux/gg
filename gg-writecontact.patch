@@ -1,0 +1,19 @@
+diff -Nur gg-0.2.0.orig/src/main.c gg-0.2.0/src/main.c
+--- gg-0.2.0.orig/src/main.c	Mon Dec  3 01:11:00 2001
++++ gg-0.2.0/src/main.c	Mon Dec  3 22:54:22 2001
+@@ -93,6 +93,7 @@
+ 			(k->group) ? k->group : "", k->uin);
+ 		tmplist = tmplist->next;
+ 	}
++	fclose(fp);
+ 	return 1;
+ }
+ 
+@@ -195,6 +196,7 @@
+ 		add_kontakt_to_list(kontakt);
+ 		tmplist = tmplist->next;
+ 	}
++	fclose(fp);
+ 	g_free(line);
+ }
+ 
