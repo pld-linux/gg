@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=GNU Gadu
+Name[pl]=GNU Gadu
+Comment=GNU Gadu free Gadu-Gadu(tm) client - Gnome version
+Comment[pl]=GNU Gadu - wolne gadanie - wersja dla Gnome.
+Exec=gg_gnome
+Icon=gg.xpm
+Terminal=0
+Type=Application
+
+
