@@ -8,5 +8,4 @@ Exec=gg_wm
 Icon=gg.xpm
 Terminal=false
 Type=Application
-
-
+# vi: encoding=utf-8
