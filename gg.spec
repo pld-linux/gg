@@ -109,7 +109,7 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla KDE.
 
 %prep
 %setup -q -n %{name}-%{version}
-#%patch0 -p1
+%patch0 -p1
 
 %build
 LDFLAGS=" -L%{_libdir} %{rpmldflags}"
