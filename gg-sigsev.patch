@@ -1,0 +1,514 @@
+diff -ur gg-0.2.2pre6/src/callbacks.c gg/src/callbacks.c
+--- gg-0.2.2pre6/src/callbacks.c	Wed Mar 27 11:35:56 2002
++++ gg/src/callbacks.c	Fri Mar 29 00:40:37 2002
+@@ -1,4 +1,4 @@
+-/* $Id$ */
++/* $Id$ */
+ 
+ /*
+  * (C) Copyright 2001-2002 Igor Popik. Released under GPL license.
+@@ -1559,3 +1559,11 @@
+ {
+     gg_delete_userlist();
+ }
++
++
++void on_katalog_publiczny_activate(GtkMenuItem * menuitem, gpointer user_data)
++{
++    GtkWidget *widget;
++    widget = create_pubdir_info();
++    gtk_widget_show(widget);
++}
+diff -ur gg-0.2.2pre6/src/callbacks.h gg/src/callbacks.h
+--- gg-0.2.2pre6/src/callbacks.h	Mon Feb 18 12:46:14 2002
++++ gg/src/callbacks.h	Fri Mar 29 00:40:37 2002
+@@ -1,4 +1,4 @@
+-/* $Id$ */
++/* $Id$ */
+ 
+ /*
+  * (C) Copyright 2001-2002 Igor Popik. Released under GPL license.
+@@ -89,3 +89,5 @@
+ void on_import_activate(GtkMenuItem * menuitem, gpointer user_data);
+ void on_export_activate(GtkMenuItem * menuitem, gpointer user_data);
+ void on_delete_activate(GtkMenuItem * menuitem, gpointer user_data);
++
++void on_katalog_publiczny_activate(GtkMenuItem * menuitem, gpointer user_data);
+diff -ur gg-0.2.2pre6/src/dock.c gg/src/dock.c
+--- gg-0.2.2pre6/src/dock.c	Mon Mar 25 09:24:15 2002
++++ gg/src/dock.c	Thu Apr  4 09:04:03 2002
+@@ -1,4 +1,4 @@
+-/* $Id$ */
++/* $Id$ */
+ 
+ /*
+  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
+@@ -29,8 +29,17 @@
+ 
+ #if USE_APPLET || USE_DOCKLET
+ 
++#include "callbacks.h"
++
+ extern GtkWidget *window;
+ 
++enum {
++	MENU_ONLINE_IDX,
++	MENU_AWAY_IDX,
++	MENU_INVISIBLE_IDX,
++	MENU_OFFLINE_IDX
++};
++
+ gboolean show_hide_main(GtkWidget * widget, gpointer data)
+ {
+ 	if (!GTK_WIDGET_VISIBLE(window)) {
+@@ -42,17 +51,36 @@
+ }
+ 
+ static
+-void applet_clicked_cb(GtkWidget * widget, GdkEventButton * ev,
+-		       gpointer data)
++void applet_menu_change_status(GtkWidget * widget, gint * index)
+ {
++	GtkWidget *optionmenu;
++	GtkWidget *status_menu;
+ 
+-	if (ev == NULL)
+-		return;
+-	if (ev->button != 1 || ev->type != GDK_BUTTON_PRESS)
+-		return;
+-	show_hide_main(widget, NULL);
++	switch (*index) {
++	case MENU_ONLINE_IDX:
++		on_available_activate(NULL, NULL);
++		break;
++	case MENU_AWAY_IDX:
++		on_away_activate(NULL, NULL);
++		break;
++	case MENU_INVISIBLE_IDX:
++		on_invisible_activate(NULL, NULL);
++		break;
++	case MENU_OFFLINE_IDX:
++		on_not_available_activate(NULL, NULL);
++		break;
++	}
++
++	optionmenu = lookup_widget(window, "optionmenu");
++	status_menu =
++	    gtk_option_menu_get_menu(GTK_OPTION_MENU(optionmenu));
+ 
++	gtk_widget_ref(status_menu);
++	gtk_option_menu_remove_menu(GTK_OPTION_MENU(optionmenu));
++	gtk_menu_set_active(GTK_MENU(status_menu), *index);
++	gtk_option_menu_set_menu(GTK_OPTION_MENU(optionmenu), status_menu);
+ }
++
+ #endif
+ 
+ #ifdef USE_APPLET
+@@ -63,19 +91,23 @@
+ #include <gdk/gdk.h>
+ 
+ #include "interface.h"
+-#include "callbacks.h"
+-
+-enum {
+-	MENU_ONLINE_IDX,
+-	MENU_AWAY_IDX,
+-	MENU_INVISIBLE_IDX,
+-	MENU_OFFLINE_IDX
+-};
+ 
+ extern GGConfig config;
+ extern GtkWidget *applet;
+ 
+ static
++void applet_clicked_cb(GtkWidget * widget, GdkEventButton * ev,
++		       gpointer data)
++{
++
++	if (ev == NULL)
++		return;
++	if (ev->button != 1 || ev->type != GDK_BUTTON_PRESS)
++		return;
++	show_hide_main(widget, NULL);
++
++}
++static
+ gint applet_save_session(GtkWidget * widget,
+ 			 const gchar * privcfgpath,
+ 			 const gchar * globcfgpath)
+@@ -120,36 +152,6 @@
+ }
+ #endif
+ 
+-static
+-void applet_menu_change_status(GtkWidget * widget, gint * index)
+-{
+-	GtkWidget *optionmenu;
+-	GtkWidget *status_menu;
+-
+-	switch (*index) {
+-	case MENU_ONLINE_IDX:
+-		on_available_activate(NULL, NULL);
+-		break;
+-	case MENU_AWAY_IDX:
+-		on_away_activate(NULL, NULL);
+-		break;
+-	case MENU_INVISIBLE_IDX:
+-		on_invisible_activate(NULL, NULL);
+-		break;
+-	case MENU_OFFLINE_IDX:
+-		on_not_available_activate(NULL, NULL);
+-		break;
+-	}
+-
+-	optionmenu = lookup_widget(window, "optionmenu");
+-	status_menu =
+-	    gtk_option_menu_get_menu(GTK_OPTION_MENU(optionmenu));
+-
+-	gtk_widget_ref(status_menu);
+-	gtk_option_menu_remove_menu(GTK_OPTION_MENU(optionmenu));
+-	gtk_menu_set_active(GTK_MENU(status_menu), *index);
+-	gtk_option_menu_set_menu(GTK_OPTION_MENU(optionmenu), status_menu);
+-}
+ 
+ void applet_change_status_pixmap(gchar *filename)
+ {
+@@ -581,6 +583,109 @@
+ 
+ }
+ 
++GtkWidget *create_docklet_menu() 
++{
++    GtkWidget *menu;
++    GtkWidget *submenu;
++    GtkWidget *menuitem;
++    static gint menus[] = { 0, 1, 2, 3 };
++    
++    menu = gtk_menu_new();
++
++    submenu = gtk_menu_new();
++    gtk_widget_show(submenu);
++
++    menuitem = gtk_menu_item_new_with_label(_("Dostêpny"));
++    gtk_widget_show(menuitem);
++    gtk_menu_append(GTK_MENU(submenu), menuitem);
++
++    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
++			   GTK_SIGNAL_FUNC(applet_menu_change_status),
++			   &menus[MENU_ONLINE_IDX]);
++
++
++    menuitem = gtk_menu_item_new_with_label(_("Zaraz wracam"));
++    gtk_widget_show(menuitem);
++    gtk_menu_append(GTK_MENU(submenu), menuitem);
++
++    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
++    			   GTK_SIGNAL_FUNC(applet_menu_change_status),
++			   &menus[MENU_AWAY_IDX]);
++    
++    menuitem = gtk_menu_item_new_with_label(_("Niewidzialny"));
++    gtk_widget_show(menuitem);
++    gtk_menu_append(GTK_MENU(submenu), menuitem);
++
++    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
++    			   GTK_SIGNAL_FUNC(applet_menu_change_status),
++			   &menus[MENU_INVISIBLE_IDX]);
++
++
++    menuitem = gtk_menu_item_new_with_label(_("Niedostêpny"));
++    gtk_widget_show(menuitem);
++    gtk_menu_append(GTK_MENU(submenu), menuitem);
++
++    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
++    			   GTK_SIGNAL_FUNC(applet_menu_change_status),
++			   &menus[MENU_OFFLINE_IDX]);
++
++    menuitem = gtk_menu_item_new_with_label(_("Zmieñ status"));
++    gtk_widget_show(menuitem);
++    gtk_menu_append(GTK_MENU(menu), menuitem);
++    gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuitem), submenu);
++    
++    menuitem = gtk_menu_item_new();
++    gtk_widget_show(menuitem);
++    gtk_menu_append(GTK_MENU(menu), menuitem);
++
++    menuitem = gtk_menu_item_new_with_label(_("Preferencje"));
++    gtk_widget_show(menuitem);
++    gtk_menu_append(GTK_MENU(menu), menuitem);
++
++    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
++			   GTK_SIGNAL_FUNC(on_konfiguracja_activate), NULL);
++
++    menuitem = gtk_menu_item_new_with_label(_("Zakoñcz"));
++    gtk_widget_show(menuitem);
++    gtk_menu_append(GTK_MENU(menu), menuitem);
++
++    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
++			   GTK_SIGNAL_FUNC(on_wyjscie_activate), NULL);
++
++    
++    menuitem = gtk_menu_item_new_with_label(_("Informacje o..."));
++    gtk_widget_show(menuitem);
++    gtk_menu_append(GTK_MENU(menu), menuitem);
++
++    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
++			   GTK_SIGNAL_FUNC(on_informacje_o_activate), NULL);
++    
++    
++    
++    return menu;
++}
++
++static
++void docklet_clicked_cb(GtkWidget * widget, GdkEventButton * ev,
++		       gpointer data)
++{
++
++	GtkWidget *menu;
++	
++	if (ev == NULL)
++		return;
++	if (ev->type == GDK_BUTTON_PRESS) {
++	    switch (ev->button) {
++		case 1:
++			show_hide_main(widget, NULL);
++			break;
++		default:
++			menu = create_docklet_menu();
++			gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,
++			ev->button, ev->time);
++	    }
++	}	
++}
+ 
+ GtkWidget *create_docklet() 
+ {
+@@ -614,7 +719,7 @@
+ 	gtk_widget_show(pixmap);
+ 
+ 	gtk_signal_connect(GTK_OBJECT(docklet), "button_press_event",
+-			   GTK_SIGNAL_FUNC(applet_clicked_cb), NULL);
++			   GTK_SIGNAL_FUNC(docklet_clicked_cb), NULL);
+ 	kwm_dockwindow_atom = gdk_atom_intern("KWM_DOCKWINDOW", FALSE);
+ 	kde_net_system_tray_window_for_atom = gdk_atom_intern("_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR", FALSE);
+ 	data[0] = TRUE;
+diff -ur gg-0.2.2pre6/src/gg.c gg/src/gg.c
+--- gg-0.2.2pre6/src/gg.c	Wed Mar 27 11:35:57 2002
++++ gg/src/gg.c	Wed Apr  3 22:55:39 2002
+@@ -1,4 +1,4 @@
+-/* $Id$ */
++/* $Id$ */
+ 
+ /*
+  * (C) Copyright 2001-2002 Igor Popik. Released under terms of GPL license.
+@@ -131,10 +131,8 @@
+ 	gint cnt = 0;
+ 
+ 	tmplist = watches;
+-	g_print("TIMEOUT\n");
++	g_print("TIMEOUT %d\n", (int) tmplist);
+ 	while (tmplist) {
+-		g_print("timeout = %d\n", r->timeout);
+-
+ 		r = ((GGWatch *) (tmplist->data));
+ 
+ 		if (r != NULL) {
+@@ -150,6 +148,7 @@
+ 		cnt++;
+ 		tmplist = tmplist->next;
+ 	}
++	g_print("OUT\n");
+ 	if (cnt)
+ 		return TRUE;
+ 	else {
+diff -ur gg-0.2.2pre6/src/interface.c gg/src/interface.c
+--- gg-0.2.2pre6/src/interface.c	Wed Mar 27 11:44:59 2002
++++ gg/src/interface.c	Sun Mar 31 11:09:27 2002
+@@ -1,4 +1,4 @@
+-/* $Id$ */
++/* $Id$ */
+ 
+ /*
+  * (C) Copyright 2001 Igor Popik. Released under terms of GPL license.
+@@ -82,6 +82,12 @@
+ 	 (gpointer) on_przypomnij_haslo_activate, NULL, NULL,
+ 	 GNOME_APP_PIXMAP_NONE, NULL,
+ 	 0, (GdkModifierType) 0, NULL},
++	{
++	 GNOME_APP_UI_ITEM, N_("Katalog publiczny"),
++	 NULL,
++	 (gpointer) on_katalog_publiczny_activate, NULL, NULL,
++	 GNOME_APP_PIXMAP_NONE, NULL,
++	 0, (GdkModifierType) 0, NULL},
+ 
+ 	GNOMEUIINFO_MENU_PREFERENCES_ITEM(on_konfiguracja_activate, NULL),
+ 	{
+@@ -2409,3 +2415,167 @@
+ 
+ 	return register_dialog;
+ }
++
++
++GtkWidget *create_pubdir_info()
++{
++	GtkWidget *pubdir;
++	GtkWidget *main_vbox;
++	GtkWidget *vbox;
++	GtkWidget *frame;
++	GtkWidget *hbox;
++	GtkWidget *pixmap;
++	GtkWidget *label;
++	GtkWidget *entry;
++	GtkWidget *hbuttonbox;
++	GtkWidget *button;
++
++	pubdir = gtk_window_new(GTK_WINDOW_DIALOG);
++	gtk_object_set_data(GTK_OBJECT(pubdir), "pubdir", pubdir);
++	gtk_widget_set_usize(pubdir, 430, 250);
++	gtk_window_set_title(GTK_WINDOW(pubdir),
++			     _("Edycja danych w katalogu publicznym"));
++	gtk_window_set_position(GTK_WINDOW(pubdir), GTK_WIN_POS_CENTER);
++
++	main_vbox = gtk_vbox_new(FALSE, 0);
++	gtk_widget_show(main_vbox);
++	gtk_container_add(GTK_CONTAINER(pubdir), main_vbox);
++
++	frame = gtk_frame_new(_("Osoba"));
++	gtk_widget_show(frame);
++	gtk_box_pack_start(GTK_BOX(main_vbox), frame, TRUE, TRUE,
++			   3);
++	gtk_container_set_border_width(GTK_CONTAINER(frame), 3);
++
++	vbox = gtk_vbox_new(FALSE, 0);
++	gtk_widget_show(vbox);
++	gtk_container_add(GTK_CONTAINER(frame), vbox);
++
++	hbox = gtk_hbox_new(FALSE, 0);
++	gtk_widget_show(hbox);
++	gtk_box_pack_start(GTK_BOX(vbox), hbox, TRUE, TRUE, 0);
++
++	pixmap = create_pixmap(pubdir, "pubdir_info.xpm");
++	gtk_widget_show(pixmap);
++	gtk_box_pack_start(GTK_BOX(hbox), pixmap, FALSE, FALSE,
++			   0);
++
++	vbox = gtk_vbox_new(FALSE, 0);
++	gtk_widget_show(vbox);
++	gtk_box_pack_start(GTK_BOX(hbox), vbox, TRUE, TRUE,
++			   0);
++
++	hbox = gtk_hbox_new(FALSE, 0);
++	gtk_widget_show(hbox);
++	gtk_box_pack_start(GTK_BOX(vbox), hbox, TRUE, TRUE,
++			   0);
++
++	label = gtk_label_new(_("Imiê: "));
++	gtk_widget_show(label);
++	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE,
++			   FALSE, 5);
++	gtk_widget_set_usize(label, 45, -2);
++
++	entry = gtk_entry_new();
++	gtk_widget_ref(entry);
++	gtk_object_set_data_full(GTK_OBJECT(pubdir), "first_name",
++				 entry,
++				 (GtkDestroyNotify) gtk_widget_unref);
++	gtk_widget_show(entry);
++	gtk_box_pack_start(GTK_BOX(hbox), entry, FALSE, TRUE,
++			   0);
++	gtk_widget_set_usize(entry, 110, -2);
++
++	label = gtk_label_new(_("Nazwisko: "));
++	gtk_widget_show(label);
++	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE,
++			   FALSE, 10);
++
++	entry = gtk_entry_new();
++	gtk_widget_ref(entry);
++	gtk_object_set_data_full(GTK_OBJECT(pubdir), "last_name",
++				 entry,
++				 (GtkDestroyNotify) gtk_widget_unref);
++	gtk_widget_show(entry);
++	gtk_box_pack_start(GTK_BOX(hbox), entry, FALSE, TRUE,
++			   0);
++	gtk_widget_set_usize(entry, 110, -2);
++
++	hbox = gtk_hbox_new(FALSE, 0);
++	gtk_widget_show(hbox);
++	gtk_box_pack_start(GTK_BOX(vbox), hbox, TRUE, TRUE,
++			   0);
++
++	label = gtk_label_new(_("Pseudo:"));
++	gtk_widget_show(label);
++	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE,
++			   FALSE, 5);
++	gtk_widget_set_usize(label, 45, -2);
++
++	entry = gtk_entry_new();
++	gtk_widget_ref(entry);
++	gtk_object_set_data_full(GTK_OBJECT(pubdir), "nick", entry,
++				 (GtkDestroyNotify) gtk_widget_unref);
++	gtk_widget_show(entry);
++	gtk_box_pack_start(GTK_BOX(hbox), entry, FALSE, TRUE, 0);
++	gtk_widget_set_usize(entry, 110, -2);
++
++	frame = gtk_frame_new(_("Miejscowo¶æ"));
++	gtk_widget_show(frame);
++	gtk_box_pack_start(GTK_BOX(main_vbox), frame, TRUE, TRUE,
++			   3);
++	gtk_container_set_border_width(GTK_CONTAINER(frame), 3);
++
++	hbox = gtk_hbox_new(FALSE, 0);
++	gtk_widget_show(hbox);
++	gtk_container_add(GTK_CONTAINER(frame), hbox);
++
++	entry = gtk_entry_new();
++	gtk_widget_ref(entry);
++	gtk_object_set_data_full(GTK_OBJECT(pubdir), "city", entry,
++				 (GtkDestroyNotify) gtk_widget_unref);
++	gtk_widget_show(entry);
++	gtk_box_pack_start(GTK_BOX(hbox), entry, FALSE, TRUE, 5);
++	gtk_widget_set_usize(entry, 100, -2);
++
++	frame = gtk_frame_new(_("Tel. komórkowy"));
++	gtk_widget_show(frame);
++	gtk_box_pack_start(GTK_BOX(main_vbox), frame, TRUE, TRUE,
++			   3);
++	gtk_container_set_border_width(GTK_CONTAINER(frame), 3);
++
++	hbox = gtk_hbox_new(FALSE, 0);
++	gtk_widget_show(hbox);
++	gtk_container_add(GTK_CONTAINER(frame), hbox);
++
++	entry = gtk_entry_new();
++	gtk_widget_ref(entry);
++	gtk_object_set_data_full(GTK_OBJECT(pubdir), "mobile", entry,
++				 (GtkDestroyNotify) gtk_widget_unref);
++	gtk_widget_show(entry);
++	gtk_box_pack_start(GTK_BOX(hbox), entry, FALSE, FALSE, 5);
++	gtk_widget_set_usize(entry, 100, -2);
++
++	hbuttonbox = gtk_hbutton_box_new();
++	gtk_widget_show(hbuttonbox);
++	gtk_box_pack_start(GTK_BOX(main_vbox), hbuttonbox, FALSE, TRUE,
++			   0);
++
++	button = gtk_button_new_with_label(_("Ok"));
++	gtk_widget_show(button);
++	gtk_container_add(GTK_CONTAINER(hbuttonbox), button);
++	GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT);
++	gtk_signal_connect(GTK_OBJECT(button), "clicked",
++			   GTK_SIGNAL_FUNC(on_zamknij_anuluj_clicked), pubdir);
++
++	button = gtk_button_new_with_label(_("Anuluj"));
++	gtk_widget_show(button);
++	gtk_container_add(GTK_CONTAINER(hbuttonbox), button);
++	GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT);
++	
++	gtk_signal_connect(GTK_OBJECT(button), "clicked",
++			   GTK_SIGNAL_FUNC(on_zamknij_anuluj_clicked),
++			   pubdir);
++
++	return pubdir;
++}

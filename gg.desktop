@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=GNU Gadu
+Comment=Linux Gadu-Gadu clone
+Comment[pl]=Klon Gadu-Gadu pod Linuxa
+Exec=gg
+Icon=gg.png
+Terminal=0
+Type=Application
