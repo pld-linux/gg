@@ -1,0 +1,14 @@
+--- configure.in~	Fri May 10 14:38:27 2002
++++ configure.in	Sat Jun  1 14:14:23 2002
+@@ -37,6 +37,11 @@
+ 
+ AM_CONDITIONAL(INSTALL_GNOME_STUFF, test yes = "$enable_gnome")
+ AM_CONDITIONAL(INSTALL_GNOME_APPLET_STUFF, test yes = "$enable_panel")
++
++AM_CONDITIONAL(HAVE_ORBIT, [false])
++AM_CONDITIONAL(HAVE_GNORBA, [false])
++AM_CONDITIONAL(ADD_ARTS_SOURCES, [false])
++AM_CONDITIONAL(HAVE_ESD, [false])
+
+ if test "$enable_gnome" = yes ; then
+ 	have_gnome=no

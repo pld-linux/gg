@@ -1,0 +1,97 @@
+diff -urN orig/src/gg.c new/src/gg.c
+--- orig/src/gg.c	Sat Jun  1 18:11:49 2002
++++ new/src/gg.c	Sat Jun  1 18:10:47 2002
+@@ -400,6 +400,20 @@
+ 	return NULL;
+ }
+ 
++gchar *gg_get_status_as_string(guint uin)
++{
++	GGContact *kontakt = gg_get_contact_by_uin(uin);
++
++	if (kontakt->status==GG_STATUS_NOT_AVAILABLE)
++		return "niedostêpny";
++	else if (kontakt->status==GG_STATUS_AVAILABLE)
++		return "dostêpny";
++	else if (kontakt->status==GG_STATUS_AWAY)
++		return "zajêty";
++	else
++		return "OKURWA";	
++}
++
+ static
+ void gg_log_msg(gint sess_uin, gint uin, gchar * nick, gchar * text)
+ {
+@@ -486,8 +500,9 @@
+ 
+ 		if (kontakt->nick && *kontakt->nick) {
+ 			title =
+-			    g_strdup_printf("Rozmowa z %s (%d)",
+-					    kontakt->nick, m->sender);
++			    g_strdup_printf("Rozmowa z %s (%d) - %s",
++					    kontakt->nick, m->sender,
++						gg_get_status_as_string(kontakt->uin));
+ 		} else {
+ 			title = g_strdup_printf("Rozmowa z %d", m->sender);
+ 		}
+diff -urN orig/src/gg.h new/src/gg.h
+--- orig/src/gg.h	Sat Jun  1 18:11:49 2002
++++ new/src/gg.h	Sat Jun  1 18:10:47 2002
+@@ -148,6 +148,8 @@
+ 
+ GGContact *gg_get_contact_by_uin(guint uin);
+ 
++gchar *gg_get_status_as_string(guint uin);
++
+ #define close_connection gg_close_connection
+ 
+ void gg_close_connection(void);
+diff -urN orig/src/interface.c new/src/interface.c
+--- orig/src/interface.c	Sat Jun  1 18:11:49 2002
++++ new/src/interface.c	Sat Jun  1 18:10:47 2002
+@@ -1193,8 +1193,9 @@
+ 
+ 	nick = gg_get_nick_by_uin(sesja->uin);
+ 	title =
+-	    g_strdup_printf("Rozmowa z %s (%d)",
+-			    (nick ? nick : ""), sesja->uin);
++	    g_strdup_printf("Rozmowa z %s (%d) - %s",
++			    (nick ? nick : ""), sesja->uin,
++				gg_get_status_as_string(sesja->uin));
+ 	gtk_window_set_title(GTK_WINDOW(chat), _(title));
+ 	g_free(title);
+ 
+diff -urN orig/src/userstatus.c new/src/userstatus.c
+--- orig/src/userstatus.c	Sat Jun  1 18:11:49 2002
++++ new/src/userstatus.c	Sat Jun  1 18:10:47 2002
+@@ -129,7 +129,9 @@
+ 	GdkPixmap *pixmap;
+ 	GdkBitmap *mask;
+ 	GdkColormap *colormap;
++	GGSession *sesja;
+ 	gchar *picname;
++	gchar *title=NULL;
+ 
+ 	g_return_if_fail(kontakt != NULL);
+ 
+@@ -199,6 +201,20 @@
+ 	}
+ 	gtk_clist_sort(GTK_CLIST(lista));
+ 
++	if((sesja=gg_find_session(kontakt->uin)))
++	{
++		if(sesja->chat_window)
++		{
++			title=g_strdup_printf("Rozmowa z %s (%d) - %s",
++					kontakt->nick, kontakt->uin,
++					gg_get_status_as_string(kontakt->uin));
++
++			gtk_window_set_title(GTK_WINDOW(sesja->chat_window), title);
++
++			g_free(title);
++		}
++	}
++
+ #ifdef USE_DOCKAPP
+ 	wmgg_contact_change_status(nick, kontakt->status, prev_status);
+ #endif 
