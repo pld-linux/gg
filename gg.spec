@@ -47,8 +47,10 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla gnome.
 %patch0 -p1
 
 %build
-LDFLAGS=" -L%{_libdir} "
-%configure --enable-gnome --enable-panel
+LDFLAGS=" -L%{_libdir} %{rpmldflags}"
+%configure \
+	--enable-gnome \
+	--enable-panel
 %{__make}
 mv src/gg src/gnu_gadu_applet
 %{__make} clean
