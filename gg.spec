@@ -21,7 +21,7 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.2.4
-Release:	2
+Release:	1
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
