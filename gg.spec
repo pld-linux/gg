@@ -1,4 +1,4 @@
-%define		_release	1
+%define		_release	3
 
 Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
