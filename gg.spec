@@ -19,13 +19,13 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	1.0.0
-%define		_pre	pre2
-Release:	0.%{_pre}.1
+%define		_pre	rc1
+Release:	0.%{_pre}.0.4
 Epoch:		5
 License:	GPL
 Group:		Applications/Communications
-#Source0:	ftp://ftp.slackware.pl/gg/%{name}-%{version}%{_pre}.tar.gz
-Source0:	http://gadu.gnu.pl/%{name}-%{version}%{_pre}.tar.gz
+Source0:	ftp://ftp.slackware.pl/gg/%{name}-%{version}%{_pre}.tar.gz
+#Source0:	http://gadu.gnu.pl/%{name}-%{version}%{_pre}.tar.gz
 Source1:	%{name}.png
 Icon:		gg.xpm
 URL:		http://gadu.gnu.pl
@@ -135,7 +135,8 @@ LDFLAGS=" -L%{_libdir} %{rpmldflags}"
 %configure \
 	%{?_without_sound:--disable-esd} \
 	--enable-gnome \
-	--enable-panel
+	--enable-panel \
+	--enable-xmms
 %{__make}
 mv -f src/gg src/gg_applet
 %{__make} clean
@@ -144,7 +145,8 @@ mv -f src/gg src/gg_applet
 %if %{!?_without_gnome:1}%{?_without_gnome:0}
 %configure \
 	%{?_without_sound:--disable-esd} \
-	--enable-gnome
+	--enable-gnome \
+	--enable-xmms
 %{__make}
 mv -f src/gg src/gg_gnome
 %{__make} clean
@@ -153,7 +155,8 @@ mv -f src/gg src/gg_gnome
 %if %{!?_without_wm_applet:1}%{?_without_wm_applet:0}
 %configure \
 	%{?_without_sound:--disable-esd} \
-	--enable-dockapp
+	--enable-dockapp \
+	--enable-xmms
 %{__make}
 mv -f src/gg src/gg_wm
 %{__make} clean
@@ -163,13 +166,14 @@ mv -f src/gg src/gg_wm
 %configure \
 	--enable-docklet \
 	%{!?_without_sound:--enable-arts} \
-	--disable-esd
+	--disable-esd \
+	--enable-xmms
 %{__make}
 mv -f src/gg src/gg_kde
 %{__make} clean
 %endif
 
-%configure %{?_without_sound:--disable-esd}
+%configure %{?_without_sound:--disable-esd} --enable-xmms
 %{__make}
 
 %install
