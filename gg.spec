@@ -9,7 +9,6 @@ Group:		Applications/Communications
 Group(de):	Applikationen/Kommunikation
 Group(pl):	Aplikacje/Komunikacja
 Source0:	http://netkrab.slackware.pl/gg/%{name}-%{version}.tar.gz
-Source1:	%{name}.desktop
 Source2:	%{name}.png
 Icon:		gg.xpm
 URL:		http://netkrab.slackware.pl/gg/
@@ -28,14 +27,46 @@ Gadu-Gadu client released on GNU/GPL.
 %description -l pl
 Klient Gadu-Gadu na licencji GNU/GPL.
 
+%package common
+Summary:	GNU Gadu - free talking - common files
+Summary(pl):	GNU Gadu - wolne gadanie - wspólne pliki
+Group:		Applications/Communications
+Group(de):	Applikationen/Kommunikation
+Group(pl):	Aplikacje/Komunikacja
+Obsoletes:	gg < 0.2.0
+
+
+%description common
+Gadu-Gadu client released on GNU/GPL.
+
+%description -l pl common
+Klient Gadu-Gadu na licencji GNU/GPL.
+
+%package X11
+Summary:	GNU Gadu - free talking - gnome dockable
+Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla gnome
+Group:		Applications/Communications
+Group(de):	Applikationen/Kommunikation
+Group(pl):	Aplikacje/Komunikacja
+Prereq:		%{name}-common = %{epoch}:%{version}
+Provides:	gg = %{epoch}:%{version}-%{release}
+
+%description X11
+Gadu-Gadu client released on GNU/GPL. 
+
+%description -l pl X11
+Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla X11.
+
 %package gnome
 Summary:	GNU Gadu - free talking - gnome dockable
 Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla gnome
 Group:		Applications/Communications
 Group(de):	Applikationen/Kommunikation
 Group(pl):	Aplikacje/Komunikacja
+Prereq:		%{name}-common = %{epoch}:%{version}
+Provides:	gg = %{epoch}:%{version}-%{release}
 
-%description gnome
+%description X11
 Gadu-Gadu client released on GNU/GPL. Gnome dockable version
 
 %description -l pl gnome
@@ -63,8 +94,8 @@ install -d $RPM_BUILD_ROOT{%{_applnkdir}/Network/Communications,%{_pixmapsdir},%
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 install src/gnu_gadu_applet $RPM_BUILD_ROOT%{_bindir}
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/gg.desktop
-cat %{SOURCE1} | sed -e 's/Exec=gg/Exec=gnu_gadu_applet/' > $RPM_BUILD_ROOT%{_datadir}/applets/Network/gnu_gadu_applet.desktop
+cp -f src/GnuGadu.desktop $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/
+cat src/GnuGadu.desktop | sed -e 's/Exec=gg/Exec=gnu_gadu_applet/' > $RPM_BUILD_ROOT%{_datadir}/applets/Network/GnuGadu.desktop
 
 install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
 
@@ -73,18 +104,18 @@ gzip -9nf README ChangeLog TODO
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
+%files common
 %defattr(644,root,root,755)
 %doc *.gz
-%attr(755,root,root) %{_bindir}/gg
 %{_datadir}/gg
-%{_applnkdir}/Network/Communications/gg.desktop
 %{_pixmapsdir}/*
+
+%files X11
+%defattr(644,root,root,755)
+%{_applnkdir}/Network/Communications/GnuGadu.desktop
+%attr(755,root,root) %{_bindir}/gg
 
 %files gnome
 %defattr(644,root,root,755)
-%doc *.gz
 %attr(755,root,root) %{_bindir}/gnu_gadu_applet
-%{_datadir}/gg
-%{_datadir}/applets/Network/gnu_gadu_applet.desktop
-%{_pixmapsdir}/*
+%attr(755,root,root) %{_datadir}/applets/Network/GnuGadu.desktop
