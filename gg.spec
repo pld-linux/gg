@@ -8,10 +8,9 @@ Release:	2
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
-#Source0:	ftp://ftp.slackware.pl/gg/%{name}-%{version}.tar.gz
-Source0:	ftp://ftp.slackware.pl/gg/gg-0.2.2.1.tar.gz
-Source2:	%{name}.png
-Patch0:		gg-homedir.patch
+Source0:	ftp://ftp.slackware.pl/gg/%{name}-%{version}.tar.gz
+Source1:	%{name}.png
+Patch0:		%{name}-home_etc.patch
 Icon:		gg.xpm
 URL:		http://netkrab.slackware.pl/gg/
 BuildRequires:	gtk+-devel > 1.2.8
@@ -110,7 +109,7 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla KDE.
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p1
+#%patch0 -p1
 
 %build
 LDFLAGS=" -L%{_libdir} %{rpmldflags}"
@@ -157,7 +156,7 @@ sed -e 's/xpm$/png/' src/GnuGadu.desktop \
 sed -e 's/xpm$/png/' -e 's/Exec=gg/Exec=gg_applet\ --activate-goad-server=gg/' \
 	src/GnuGadu.desktop > $RPM_BUILD_ROOT%{_datadir}/applets/Network/GnuGadu.desktop
 
-install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
+install %{SOURCE1} $RPM_BUILD_ROOT%{_pixmapsdir}
 
 gzip -9nf README ChangeLog TODO
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/CORBA/servers/
