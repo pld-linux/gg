@@ -130,7 +130,7 @@ Gadu-Gadu client released on GNU/GPL. KDE version
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla KDE.
 
 %prep
-%setup -q 
+%setup -q
 %patch0 -p1
 
 %build
