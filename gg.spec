@@ -1,3 +1,20 @@
+#
+# Conditional build:
+#
+# _without_gnome
+# _without_gnome_applet
+# _without_kde
+# _without_wm_applet
+
+
+%{!?_without_gnome: 		%define _need_gnome	1}
+%{!?_without_gnome:			%define _need_esd	1}
+%{!?_without_gnome_applet:	%define	_need_gnome	1}
+%{!?_without_gnome_applet:	%define _nees_esd	1}
+%{!?_without_kde:			%define _need_arts	1}
+%{!?_without_wm_applet:		%define _need_esd	1}
+
+
 %define		_release	3
 
 Summary:	GNU Gadu - free talking
@@ -13,11 +30,12 @@ Source1:	%{name}.png
 Patch0:		%{name}-home_etc.patch
 Icon:		gg.xpm
 URL:		http://netkrab.slackware.pl/gg/
-BuildRequires:	gtk+-devel > 1.2.8
-BuildRequires:	esound-devel > 0.2.7
-BuildRequires:	gnome-libs-devel
-BuildRequires:	gnome-core-devel
-BuildRequires:	arts-devel
+BuildRequires:					gtk+-devel > 1.2.8
+%{?_need_gnome:BuildRequires:	gnome-libs-devel}
+%{?_need_gnome:BuildRequires:	gnome-core-devel}
+%{?_need_arts:BuildRequires:	arts-devel}
+%{?_need_esd:BuildRequires:		esound-devel > 0.2.7}
+
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_prefix		/usr/X11R6
@@ -114,25 +132,33 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla KDE.
 
 %build
 LDFLAGS=" -L%{_libdir} %{rpmldflags}"
+
+%if %{!?_without_gnome_applet:1}%{?_without_gnome_applet:0}
 %configure \
 	--enable-gnome \
 	--enable-panel
 %{__make}
 mv -f src/gg src/gg_applet
 %{__make} clean
+%endif
 
+%if %{!?_without_gnome:1}%{?_without_gnome:0}
 %configure \
 	--enable-gnome
 %{__make}
 mv -f src/gg src/gg_gnome
 %{__make} clean
+%endif
 
+%if %{!?_without_wm_applet:1}%{?_without_wm_applet:0}
 %configure \
 	--enable-dockapp
 %{__make}
 mv -f src/gg src/gg_wm
 %{__make} clean
+%endif
 
+%if %{!?_without_kde:1}%{?_without_kde:0}
 %configure \
 	--enable-docklet \
 	--enable-arts \
@@ -140,6 +166,7 @@ mv -f src/gg src/gg_wm
 %{__make}
 mv -f src/gg src/gg_kde
 %{__make} clean
+%endif
 
 %configure
 %{__make}
@@ -204,23 +231,31 @@ fi
 %{_applnkdir}/Network/Communications/GnuGadu.desktop
 %attr(755,root,root) %{_bindir}/gg
 
+%if %{!?_without_gnome:1}%{?_without_gnome:0}
 %files gnome
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_gnome
 %{_applnkdir}/Network/Communications/GnuGadu.desktop
+%endif
 
+%if %{!?_without_gnome_applet:1}%{?_without_gnome_applet:0}
 %files gnome-applet
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_applet
 %attr(755,root,root) %{_datadir}/applets/Network/GnuGadu.desktop
 %attr(755,root,root) %{_sysconfdir}/CORBA/servers/GnuGadu.gnorba
+%endif
 
+%if %{!?_without_wm_applet:1}%{?_without_wm_applet:0}
 %files wm-applet
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_wm
 %attr(755,root,root) %{_datadir}/applets/Network/GnuGadu.desktop
+%endif
 
+%if %{!?_without_kde:1}%{?_without_kde:0}
 %files kde
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_kde
 %attr(755,root,root) %{_datadir}/applets/Network/GnuGadu.desktop
+%endif
