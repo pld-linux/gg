@@ -5,12 +5,14 @@
 # _without_gnome_applet
 # _without_kde
 # _without_wm_applet
+# _without_sound
 
 
+# This looks like overkill but some day we might have *everything* bconded :)
 %{!?_without_gnome: 		%define _need_gnome	1}
-%{!?_without_gnome:			%define _need_esd	1}
+%{!?_without_gnome:         %define _need_esd   1}
 %{!?_without_gnome_applet:	%define	_need_gnome	1}
-%{!?_without_gnome_applet:	%define _nees_esd	1}
+%{!?_without_gnome_applet:  %define _nees_esd   1}
 %{!?_without_kde:			%define _need_arts	1}
 %{!?_without_wm_applet:		%define _need_esd	1}
 
@@ -31,8 +33,10 @@ URL:		http://netkrab.slackware.pl/gg/
 BuildRequires:					gtk+-devel > 1.2.8
 %{?_need_gnome:BuildRequires:	gnome-libs-devel}
 %{?_need_gnome:BuildRequires:	gnome-core-devel}
+%if %{!?_without_sound:1}%{?_without_sound:0}
 %{?_need_arts:BuildRequires:	arts-devel}
 %{?_need_esd:BuildRequires:		esound-devel > 0.2.7}
+%endif
 
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -133,6 +137,7 @@ LDFLAGS=" -L%{_libdir} %{rpmldflags}"
 
 %if %{!?_without_gnome_applet:1}%{?_without_gnome_applet:0}
 %configure \
+	%{?_without_sound:--disable-esd} \
 	--enable-gnome \
 	--enable-panel
 %{__make}
@@ -142,6 +147,7 @@ mv -f src/gg src/gg_applet
 
 %if %{!?_without_gnome:1}%{?_without_gnome:0}
 %configure \
+	%{?_without_sound:--disable-esd} \
 	--enable-gnome
 %{__make}
 mv -f src/gg src/gg_gnome
@@ -150,6 +156,7 @@ mv -f src/gg src/gg_gnome
 
 %if %{!?_without_wm_applet:1}%{?_without_wm_applet:0}
 %configure \
+	%{?_without_sound:--disable-esd} \
 	--enable-dockapp
 %{__make}
 mv -f src/gg src/gg_wm
@@ -159,14 +166,14 @@ mv -f src/gg src/gg_wm
 %if %{!?_without_kde:1}%{?_without_kde:0}
 %configure \
 	--enable-docklet \
-	--enable-arts \
+	%{!?_without_sound:--enable-arts} \
 	--disable-esd
 %{__make}
 mv -f src/gg src/gg_kde
 %{__make} clean
 %endif
 
-%configure
+%configure %{?_without_sound:--disable-esd}
 %{__make}
 
 %install
