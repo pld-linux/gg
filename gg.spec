@@ -34,7 +34,7 @@ Summary(pl):	GNU Gadu - wolne gadanie - wspólne pliki
 Group:		Applications/Communications
 Group(de):	Applikationen/Kommunikation
 Group(pl):	Aplikacje/Komunikacja
-Obsoletes:	gg < 0.2.0
+Obsoletes:	gg =< 0.2.0
 
 
 %description common
