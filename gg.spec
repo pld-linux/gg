@@ -1,9 +1,11 @@
+%define		_release	1
+
 Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.2.2
-Release:	2.pre5
-Epoch:		1
+Release:	%{_release}.pre5
+Epoch:		4
 License:	GPL
 Group:		Applications/Communications
 Source0:	http://netkrab.slackware.pl/gg/%{name}-%{version}pre5.tar.gz
