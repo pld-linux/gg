@@ -259,5 +259,5 @@ fi
 %files kde
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_kde
-%{_datadir}/applets/Network/GnuGadu.desktop
+%{_applnkdir}/Network/Communications/GnuGadu.desktop
 %endif
