@@ -7,7 +7,6 @@
 # _without_wm_applet
 # _without_sound
 
-%define snapshot 20020612
 
 # This looks like overkill but some day we might have *everything* bconded :)
 %{!?_without_gnome: 		%define _need_gnome	1}
@@ -21,14 +20,14 @@
 Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
-Version:	0.2.3
-Release:	0.1pre%{snapshot}
+Version:	0.2.2.1
+Release:	4
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
-Source0:	ftp://ftp.slackware.pl/gg/snapshots/%{name}-%{snapshot}.tar.gz
+Source0:	ftp://ftp.slackware.pl/gg/%{name}-%{version}.tar.gz
 Source1:	%{name}.png
-Patch0:		%{name}-ac_fix.patch
+Patch0:		%{name}-home_etc.patch
 Icon:		gg.xpm
 URL:		http://netkrab.slackware.pl/gg/
 BuildRequires:					gtk+-devel > 1.2.8
@@ -130,15 +129,11 @@ Gadu-Gadu client released on GNU/GPL. KDE version
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla KDE.
 
 %prep
-%setup -q -n %{name}-%{snapshot}
-%patch0 -p0
+%setup -q -n %{name}-%{version}
+%patch0 -p1
 
 %build
 LDFLAGS=" -L%{_libdir} %{rpmldflags}"
-
-aclocal -I macros
-autoconf
-automake -a -c -f
 
 %if %{!?_without_gnome_applet:1}%{?_without_gnome_applet:0}
 %configure \
