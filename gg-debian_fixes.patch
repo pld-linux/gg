@@ -1,0 +1,374 @@
+--- gg-1.0.0rel.orig/src/callbacks.c	2003-01-31 10:39:08.000000000 +0100
++++ gg-1.0.0rel/src/callbacks.c	2003-06-29 02:51:27.000000000 +0200
+@@ -237,7 +237,10 @@
+ 	
+ 	    config.uin = atoi(tmpuin);
+ 	    config.password = g_strdup(tmppass);
+-	    write_config();
++	    if (! write_config()) {
++		show_error_dialog("Nie uda³o siê zapisaæ konfiguracji!");
++		return;
++	    }
+ 
+ 	} else {
+ 	    GtkWidget *register_dialog = create_register();
+@@ -696,12 +699,10 @@
+ void on_zapisz_ustawienia_activate(GtkMenuItem * menuitem,
+ 				   gpointer user_data)
+ {
+-	write_config();
+-	write_contacts();
+-
+-	show_message_dialog("Ustawienia zosta³y zapisane!");
+-
+-	return;
++	if ((! write_config()) || (! write_contacts()))
++		show_error_dialog("Nie uda³o siê zapisaæ ustawieñ!");
++	else
++		show_message_dialog("Ustawienia zosta³y zapisane!");
+ }
+ 
+ void on_dodaj_clicked(GtkButton * button, GtkWidget * dialog)
+@@ -1113,7 +1114,8 @@
+ 		config.away_msg_ask = 0;
+ 	}
+ 
+-	write_config();
++	if (! write_config())
++		show_error_dialog("Nie uda³o siê zapisaæ konfiguracji!");
+ 
+ #ifndef USE_GNOME
+ 	gtk_widget_destroy(dialog);
+@@ -1352,7 +1354,8 @@
+ 	// FIXME: jaki tu powinien byæ naprawde poprzedni status
+ 	change_kontakt_status(kontakt, GG_STATUS_OFFLINE); 
+ 	gtk_widget_destroy(edycja);
+-	write_contacts();
++	if (! write_contacts())
++		show_error_dialog("Nie uda³o siê zapisaæ listy kontaktów!");
+ }
+ static void on_ignore_restore(GtkMenuItem * menuitem, guint * uin)
+ {
+@@ -1552,8 +1555,17 @@
+ applet_save_session(GtkWidget * widget,
+ 		    const gchar * privcfgpath, const gchar * globcfgpath)
+ {
+-	write_config();
+-	write_contacts();
++	/*
++	 * Looks like there's no way to indicate that session saving failed.
++	 * At least warn the user if it does fail.
++	 */
++	if ((! write_config()) || (! write_contacts())) {
++		show_error_dialog("Zapisywanie ustawieñ nie uda³o siê."
++				  "Spróbuj usun±æ problem - "
++				  "próba zapisania zostanie ponowiona.");
++		write_config();
++		write_contacts();
++	}
+ #ifdef DEBUG
+ 	g_print("applet_save_session(): session saved.\n");
+ #endif
+@@ -1862,11 +1874,15 @@
+     }    
+     
+     while (fgets(buf, 1024, in)) {
+-	fputs(buf, out);
++	if (fputs(buf, out) == EOF) {
++	    show_error_dialog("Nie uda³o siê zapisaæ ca³ego pliku");
++	    return;
++	}
+     }
+     
+     fclose(in);
+-    fclose(out);
++    if (fclose(out) == EOF)
++        show_error_dialog("Nie uda³o siê zapisaæ ca³ego pliku");
+ }
+ 
+ void on_zapisz_jako_clicked(GtkButton * button, gpointer user_data) 
+diff -ruN gg-1.0.0rel.orig/src/dock.c gg-1.0.0rel/src/dock.c
+--- gg-1.0.0rel.orig/src/dock.c	2002-11-13 10:33:23.000000000 +0100
++++ gg-1.0.0rel/src/dock.c	2003-06-29 02:52:46.000000000 +0200
+@@ -115,8 +115,17 @@
+ 			 const gchar * privcfgpath,
+ 			 const gchar * globcfgpath)
+ {
+-	write_config();
+-	write_contacts();
++	/*
++	 * Looks like there's no way to indicate that session saving failed.
++	 * At least warn the user if it does fail.
++	 */
++	if ((! write_config()) || (! write_contacts())) {
++		show_error_dialog("Zapisywanie ustawieñ nie uda³o siê."
++				  "Spróbuj usun±æ problem - "
++				  "próba zapisania zostanie ponowiona.");
++		write_config();
++		write_contacts();
++	}
+ 
+ 	g_print("applet_save_session(): session saved.\n");
+ 
+diff -ruN gg-1.0.0rel.orig/src/gg-types.h gg-1.0.0rel/src/gg-types.h
+--- gg-1.0.0rel.orig/src/gg-types.h	2003-01-27 12:58:08.000000000 +0100
++++ gg-1.0.0rel/src/gg-types.h	2003-06-29 02:58:14.000000000 +0200
+@@ -282,7 +282,7 @@
+ 
+ void read_config(void);
+ 
+-void write_config(void);
++int write_config(void);
+ 
+ int write_contacts(void);
+ 
+diff -ruN gg-1.0.0rel.orig/src/gg.c gg-1.0.0rel/src/gg.c
+--- gg-1.0.0rel.orig/src/gg.c	2003-01-27 12:58:08.000000000 +0100
++++ gg-1.0.0rel/src/gg.c	2003-06-29 02:56:47.000000000 +0200
+@@ -513,7 +513,9 @@
+ 	g_free(lognick);
+ 	g_free(timestamp1);
+ 	g_free(timestamp2);
+-	fclose(fp);
++	if (fclose(fp) == EOF)
++		show_error_dialog("Nie uda³o siê dopisaæ wiadomo¶ci "
++				  "do historii rozmów.");
+ }
+ 
+ void gg_recv_msg(GGCmd * cmd)
+@@ -1142,7 +1144,8 @@
+ 		show_error_dialog("B³±d podczas zmiany has³a!!!");
+ 	} else {
+ 		show_message_dialog("Has³o zosta³o zmienione!");
+-		write_config();
++		if (! write_config())
++		    show_error_dialog("Nie uda³o siê zapisaæ konfiguracji!");
+ 	}
+ }
+ 
+@@ -1227,7 +1230,8 @@
+ 		show_error_dialog(_("B³±d podczas rejestracji u¿ytkownika"));
+ 	} else {
+ 		show_message_dialog(_("Nowy u¿ytkownik zosta³ zarejestrowany"));
+-		write_config();
++		if (! write_config())
++		    show_error_dialog("Nie uda³o siê zapisaæ konfiguracji!");
+ 	}
+ }
+ 
+@@ -1394,7 +1398,8 @@
+ 		    cp_to_iso(tmpline);
+ 		    show_message_dialog(tmpline);
+ 		    config.last_sysmsg = strlen(tmpline);
+-		    write_config();
++		    if (! write_config())
++		        show_error_dialog("Nie uda³o siê zapisaæ konfiguracji!");
+ 		}
+ 		g_strfreev(info);
+ 		g_strfreev(addr);
+@@ -1835,7 +1840,8 @@
+ //    fprintf(fp, "%s\n", (r->familycity) ? r->familycity : "");     
+ //    fprintf(fp, "%s\n", (r->familyname) ? r->familyname : "");     
+ 
+-    fclose(fp);
++    if (fclose(fp) == EOF)
++        g_warning("Nie uda³o siê zapisaæ katalogu publicznego do pliku!");
+     
+     return 0;
+ }
+diff -ruN gg-1.0.0rel.orig/src/gg.h gg-1.0.0rel/src/gg.h
+--- gg-1.0.0rel.orig/src/gg.h	2003-01-25 16:46:02.000000000 +0100
++++ gg-1.0.0rel/src/gg.h	2003-06-29 03:21:10.000000000 +0200
+@@ -254,4 +254,4 @@
+ void free_contact(GGContact *k);
+ 
+ void gg_new_msg_animate_off();
+-#endif
+\ Brak znaku nowej linii na koñcu pliku
++#endif
+diff -ruN gg-1.0.0rel.orig/src/main.c gg-1.0.0rel/src/main.c
+--- gg-1.0.0rel.orig/src/main.c	2002-12-01 22:17:22.000000000 +0100
++++ gg-1.0.0rel/src/main.c	2003-06-29 03:24:33.000000000 +0200
+@@ -82,12 +82,14 @@
+ int write_contacts()
+ {
+ 	gchar *path;
++	gchar *tmp_path;
+ 	FILE *fp;
+ 	GList *tmplist;
+ 
+ 	path = g_strconcat(config.homedir, "/userlist", NULL);
++	tmp_path = g_strdup_printf("%s.%d.%ld", path, (int) getpid(), (long) time(NULL));
+ 
+-	fp = fopen(path, "w");
++	fp = fopen(tmp_path, "w");
+ 
+ 	if (!fp) {
+ 		g_print
+@@ -116,7 +118,22 @@
+ 
+ 		tmplist = tmplist->next;
+ 	}
+-	fclose(fp);
++	if (fclose(fp) == EOF) {
++		unlink(tmp_path);
++		g_free(path);
++		g_free(tmp_path);
++		return 0;
++	}
++
++	if (rename(tmp_path, path) == -1) {
++		unlink(tmp_path);
++		g_free(path);
++		g_free(tmp_path);
++		return 0;
++	}
++	
++	g_free(path);
++	g_free(tmp_path);
+ 	return 1;
+ }
+ 
+@@ -292,7 +309,10 @@
+ 		fp = fopen(path, "r");
+ 		if (!fp) {
+ 		    g_warning("Cannot read config file. Using defaults.");
+-		    write_config();
++		    if (! write_config()) {
++			g_error("Cannot write new config file!");
++			exit(1);
++		    }
+ 		    return;
+ 		}
+ 	}
+@@ -467,10 +487,11 @@
+ 	fclose(fp);
+ }
+ 
+-void write_config()
++int write_config()
+ {
+ 	FILE *fp;
+ 	gchar *path;
++	gchar *tmp_path;
+ 	GList *tmp_list;
+ 	gchar *tmp;
+ 	
+@@ -479,13 +500,16 @@
+ 	    config.height=window->allocation.height;
+ 	}
+ 	path = g_strconcat(config.homedir, "/config", NULL);
++	tmp_path = g_strdup_printf("%s.%d.%ld", path, (int) getpid(), (long) time(NULL));
+ 
+-	fp = fopen(path, "w");
++	fp = fopen(tmp_path, "w");
+ 
+ 	if (fp == NULL) {
++		g_free(path);
++		g_free(tmp_path);
+ 		g_warning
+ 		    ("write_config(): Cannot write config file. Giving up.");
+-		return;
++		return 0;
+ 	}
+ 
+ 	chmod(path, S_IRUSR | S_IWUSR);
+@@ -566,8 +590,23 @@
+ 		fprintf(fp, "ignore %d\n", *(guint *) tmp_list->data);
+ 		tmp_list = tmp_list->next;
+ 	}
+-	fclose(fp);
+-	free(path);
++	if (fclose(fp) == EOF) {
++		unlink(tmp_path);
++		g_free(path);
++		g_free(tmp_path);
++		return 0;
++	}
++
++	if (rename(tmp_path, path) == -1) {
++		unlink(tmp_path);
++		g_free(path);
++		g_free(tmp_path);
++		return 0;
++	}
++	
++	g_free(path);
++	g_free(tmp_path);
++	return 1;
+ }
+ 
+ /* na razie ma³o przdatne ;-) */
+@@ -597,10 +636,16 @@
+ void shutdown_gg()
+ {
+ 	if (config.save_config_on_exit) {
+-	    write_config();
++	    if (! write_config()) {
++		show_error_dialog("Nie uda³o siê zapisaæ konfiguracji!");
++		return;
++	    }
+ 	}
+ 	if (config.save_contacts_on_exit) {
+-	    write_contacts();
++	    if (! write_contacts()) {
++		show_error_dialog("Nie uda³o siê zapisaæ listy kontaktów!");
++		return;
++	    }
+ 	}
+ 	
+ #ifdef USE_APPLET
+diff -ruN gg-1.0.0rel.orig/src/preferences.c gg-1.0.0rel/src/preferences.c
+--- gg-1.0.0rel.orig/src/preferences.c	2002-11-27 17:52:02.000000000 +0100
++++ gg-1.0.0rel/src/preferences.c	2003-06-29 02:57:34.000000000 +0200
+@@ -206,7 +206,8 @@
+ 	}
+ 
+ 
+-	write_config();
++	if (! write_config())
++		show_error_dialog("Nie uda³o siê zapisaæ konfiguracji!");
+ 
+ #ifndef USE_GNOME
+ 	gtk_widget_destroy(dialog);
+diff -ruN gg-1.0.0rel.orig/src/search.c gg-1.0.0rel/src/search.c
+--- gg-1.0.0rel.orig/src/search.c	2003-02-16 21:09:03.000000000 +0100
++++ gg-1.0.0rel/src/search.c	2003-06-29 03:29:29.000000000 +0200
+@@ -157,7 +157,7 @@
+ 
+ 	    gtk_clist_clear(GTK_CLIST(wyniki_lista));
+ 	    if (wyniki_kontakty) {
+-		GList *tmplist;
++		GList *tmplist = wyniki_kontakty;
+ 		while (tmplist) {
+ 		    GGContact *k = tmplist->data;
+ 		    free_contact(k);
+diff -ruN gg-1.0.0rel.orig/src/search.h gg-1.0.0rel/src/search.h
+--- gg-1.0.0rel.orig/src/search.h	2003-01-25 16:46:02.000000000 +0100
++++ gg-1.0.0rel/src/search.h	2003-06-29 03:24:43.000000000 +0200
+@@ -35,4 +35,4 @@
+ guint gg_search50_next(gg_search50_t res);
+ guint32 gg_search50_seq(gg_search50_t res);
+ void gg_search50_free(gg_search50_t res);
+-int gg_search50_handle_reply(gg_search50_t res, const char *packet, int length);
+\ Brak znaku nowej linii na koñcu pliku
++int gg_search50_handle_reply(gg_search50_t res, const char *packet, int length);
+diff -ruN gg-1.0.0rel.orig/src/sound-arts.cpp gg-1.0.0rel/src/sound-arts.cpp
+--- gg-1.0.0rel.orig/src/sound-arts.cpp	2002-05-08 14:33:35.000000000 +0200
++++ gg-1.0.0rel/src/sound-arts.cpp	2003-06-29 03:29:44.000000000 +0200
+@@ -72,4 +72,4 @@
+ 	return server.play(absolutePath(filename)) != 0;
+ }
+ 
+-#endif HAVE_ARTS
++#endif /* HAVE_ARTS */
+diff -ruN gg-1.0.0rel.orig/src/sound-arts.h gg-1.0.0rel/src/sound-arts.h
+--- gg-1.0.0rel.orig/src/sound-arts.h	2002-05-08 14:33:35.000000000 +0200
++++ gg-1.0.0rel/src/sound-arts.h	2003-06-29 03:35:36.000000000 +0200
+@@ -16,4 +16,4 @@
+ }
+ #endif
+ 
+-#endif /* HAVE_ARTS */
+\ Brak znaku nowej linii na koñcu pliku
++#endif /* HAVE_ARTS */
