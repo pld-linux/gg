@@ -1,7 +1,7 @@
 # Conditional build:
 #
-# _without_gnome	- don't build with Gnome
-# _without_gnome_applet	- don't build Gnome applet
+# _without_gnome	- don't build with GNOME
+# _without_gnome_applet	- don't build GNOME applet
 # _without_kde		- don't build KDE applet
 # _without_wm_applet	- don't build WM applet
 # _without_sound	- disable sound support
@@ -100,7 +100,7 @@ Provides:	gg = %{epoch}:%{version}-%{release}
 Gadu-Gadu client released on GNU/GPL. GNOME dockable version
 
 %description gnome-applet -l pl
-Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla gnome.
+Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla GNOME.
 
 %package wm-applet
 Summary:	GNU Gadu - free talking - WindowMaker dockable version
