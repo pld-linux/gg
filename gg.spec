@@ -5,9 +5,9 @@ Version:	0.2.pre2
 Release:	2
 Epoch:		2
 License:	GPL
-Group:          Applications/Communications
-Group(de):      Applikationen/Kommunikation
-Group(pl):      Aplikacje/Komunikacja
+Group:		Applications/Communications
+Group(de):	Applikationen/Kommunikation
+Group(pl):	Aplikacje/Komunikacja
 Source0:	http://netkrab.slackware.pl/gg/%{name}-%{version}.tar.gz
 Source1:	%{name}.desktop
 Source2:	%{name}.png
@@ -15,11 +15,12 @@ Icon:		gg.xpm
 URL:		http://netkrab.slackware.pl/gg/
 BuildRequires:	gtk+-devel > 1.2.8
 BuildRequires:	esound-devel > 0.2.7
-BuildRequires:  gnome-libs-devel 
-BuildRequires:  gnome-core-devel 
+BuildRequires:	gnome-libs-devel 
+BuildRequires:	gnome-core-devel 
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_prefix		/usr/X11R6
+%define		_mandir		%{_prefix}/man
 
 %description
 Gadu-Gadu client released on GNU/GPL.
@@ -30,8 +31,9 @@ Klient Gadu-Gadu na licencji GNU/GPL.
 %package gnome
 Summary:	GNU Gadu - free talking - gnome dockable
 Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla gnome
-Group(de):      Applikationen/Kommunikation
-Group(pl):      Aplikacje/Komunikacja
+Group:		Applications/Communications
+Group(de):	Applikationen/Kommunikation
+Group(pl):	Aplikacje/Komunikacja
 
 %description gnome
 Gadu-Gadu client released on GNU/GPL. Gnome dockable version
@@ -43,7 +45,7 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla gnome.
 %setup  -q
 
 %build
-LDFLAGS=" -L/usr/X11R6/lib "
+LDFLAGS=" -L%{_libdir} "
 %configure --enable-gnome --enable-panel
 %{__make}
 mv src/gg src/gnu_gadu_applet
