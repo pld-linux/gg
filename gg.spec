@@ -9,7 +9,6 @@ Group(de):      Applikationen/Kommunikation
 Group(pl):      Aplikacje/Komunikacja
 Source0:	http://netkrab.slackware.pl/gg/%{name}-%{version}.tar.gz
 Source1:	%{name}.desktop
-Source2:	%{name}.xpm
 Icon:		gg.xpm
 URL:		http://netkrab.slackware.pl/gg/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
