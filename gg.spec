@@ -176,10 +176,10 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_applnkdir}/Network/Communications,%{_pixmapsdir},%{_datadir}/applets/Network/}
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
-install src/gg_applet $RPM_BUILD_ROOT%{_bindir}
-install src/gg_gnome $RPM_BUILD_ROOT%{_bindir}
-install src/gg_wm $RPM_BUILD_ROOT%{_bindir}
-install src/gg_kde $RPM_BUILD_ROOT%{_bindir}
+%{!?_without_gnome_applet:install src/gg_applet $RPM_BUILD_ROOT%{_bindir}}
+%{!?_without_gnome:install src/gg_gnome $RPM_BUILD_ROOT%{_bindir}}
+%{!?_without_wm_applet:install src/gg_wm $RPM_BUILD_ROOT%{_bindir}}
+%{!?_without_kde:install src/gg_kde $RPM_BUILD_ROOT%{_bindir}}
 
 sed -e 's/xpm$/png/' src/GnuGadu.desktop \
 	> $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu.desktop
