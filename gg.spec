@@ -19,16 +19,15 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	1.0.0
-Release:	1.1
+Release:	1.2
 Epoch:		5
 License:	GPL
 Group:		Applications/Communications
 Source0:	ftp://ftp.slackware.pl/pub/gg/%{name}-%{version}.tar.gz
 Source1:	%{name}.png
 Source2:	%{name}_gnome.desktop
-Source3:	%{name}_gnome_applet.desktop
-Source4:	%{name}_WM_applet.desktop
-Source5:	%{name}_KDE.desktop
+Source3:	%{name}_WM_applet.desktop
+Source4:	%{name}_KDE.desktop
 Icon:		gg.xpm
 URL:		http://gadu.gnu.pl
 %{?_need_arts:BuildRequires:	arts-devel}
@@ -197,9 +196,8 @@ sed -e 's/xpm$/png/' -e 's/Exec=gg/Exec=gg_applet\ --activate-goad-server=gg/' \
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_pixmapsdir}
 install %{SOURCE2} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu_gnome.desktop
-install %{SOURCE3} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu_gnome_applet.desktop
-install %{SOURCE4} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu_WM_applet.desktop
-install %{SOURCE5} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu_KDE.desktop
+install %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/applets/Network/GnuGadu_WM_applet.desktop
+install %{SOURCE4} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu_KDE.desktop
 
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/CORBA/servers/
 install src/GnuGadu.gnorba $RPM_BUILD_ROOT%{_sysconfdir}/CORBA/servers/
@@ -229,7 +227,7 @@ rm -rf $RPM_BUILD_ROOT
 %files gnome-applet
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_applet
-%{_datadir}/applets/Network/GnuGadu_gnome_applet.desktop
+%{_datadir}/applets/Network/GnuGadu.desktop
 %{_sysconfdir}/CORBA/servers/GnuGadu.gnorba
 %endif
 
