@@ -3,6 +3,7 @@ Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.1
 Release:	1
+Epoch:		1
 License:	GPL
 Group:          Applications/Communications
 Group(de):      Applikationen/Kommunikation
