@@ -89,7 +89,7 @@ diff -Nur gg-0.2.2.1.orig/src/main.c gg-0.2.2.1/src/main.c
 -	g_free(path);
 +	config.homedir = NULL;
 +	if (getenv("CONFIG_DIR"))
-+	    config.homedir = g_strconcat(getenv("HOME"), 
++	    config.homedir = g_strconcat(getenv("HOME"),"/", 
 +		getenv("CONFIG_DIR"), "/gg", NULL);
 +	else
 +	    config.homedir = g_strconcat(getenv("HOME"), "/.gg", NULL);
