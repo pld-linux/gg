@@ -2,7 +2,7 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.2.0
-Release:	3
+Release:	4
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
@@ -58,18 +58,33 @@ Gadu-Gadu client released on GNU/GPL.
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla X11.
 
 %package gnome
-Summary:	GNU Gadu - free talking - gnome dockable
-Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla gnome
+Summary:	GNU Gadu - free talking - GNOME version
+Summary(pl):	GNU Gadu - wolne gadanie - wersja dla GNOME
 Group:		Applications/Communications
 Group(de):	Applikationen/Kommunikation
 Group(pl):	Aplikacje/Komunikacja
 Prereq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
 
-%description X11
-Gadu-Gadu client released on GNU/GPL. Gnome dockable version
+%description gnome
+Gadu-Gadu client released on GNU/GPL. GNOME version
 
 %description -l pl gnome
+Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla GNOME.
+
+%package gnome-applet
+Summary:	GNU Gadu - free talking - GNOME dockable version
+Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla GNOME
+Group:		Applications/Communications
+Group(de):	Applikationen/Kommunikation
+Group(pl):	Aplikacje/Komunikacja
+Prereq:		%{name}-common = %{epoch}:%{version}
+Provides:	gg = %{epoch}:%{version}-%{release}
+
+%description gnome-applet
+Gadu-Gadu client released on GNU/GPL. GNOME dockable version
+
+%description -l pl gnome-applet
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla gnome.
 
 %prep
@@ -81,7 +96,13 @@ LDFLAGS=" -L%{_libdir} %{rpmldflags}"
 	--enable-gnome \
 	--enable-panel
 %{__make}
-mv src/gg src/gnu_gadu_applet
+mv src/gg src/gg_applet
+%{__make} clean
+
+%configure \
+	--enable-gnome 
+%{__make}
+mv src/gg src/gg_gnome
 %{__make} clean
 
 %configure
@@ -92,10 +113,11 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_applnkdir}/Network/Communications,%{_pixmapsdir},%{_datadir}/applets/Network/}
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
-install src/gnu_gadu_applet $RPM_BUILD_ROOT%{_bindir}
+install src/gg_applet $RPM_BUILD_ROOT%{_bindir}
+install src/gg_gnome $RPM_BUILD_ROOT%{_bindir}
 
 cp -f src/GnuGadu.desktop $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/
-cat src/GnuGadu.desktop | sed -e 's/Exec=gg/Exec=gnu_gadu_applet/' > $RPM_BUILD_ROOT%{_datadir}/applets/Network/GnuGadu.desktop
+cat src/GnuGadu.desktop | sed -e 's/Exec=gg/Exec=gg_applet\ --activate-goad-server=gg/' > $RPM_BUILD_ROOT%{_datadir}/applets/Network/GnuGadu.desktop
 
 install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
 
@@ -117,5 +139,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files gnome
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/gnu_gadu_applet
+%attr(755,root,root) %{_bindir}/gg_applet
+%{_applnkdir}/Network/Communications/GnuGadu.desktop
+
+%files gnome-applet
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/gg_gnome
 %attr(755,root,root) %{_datadir}/applets/Network/GnuGadu.desktop
