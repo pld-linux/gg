@@ -6,8 +6,6 @@ Release:	2.pre2
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
-Group(de):	Applikationen/Kommunikation
-Group(pl):	Aplikacje/Komunikacja
 Source0:	http://netkrab.slackware.pl/gg/%{name}-%{version}pre2.tar.gz
 Source2:	%{name}.png
 Icon:		gg.xpm
@@ -32,8 +30,6 @@ Klient Gadu-Gadu na licencji GNU/GPL.
 Summary:	GNU Gadu - free talking - common files
 Summary(pl):	GNU Gadu - wolne gadanie - wspólne pliki
 Group:		Applications/Communications
-Group(de):	Applikationen/Kommunikation
-Group(pl):	Aplikacje/Komunikacja
 Obsoletes:	gg =< 0.2.0
 
 %description common
@@ -46,8 +42,6 @@ Klient Gadu-Gadu na licencji GNU/GPL.
 Summary:	GNU Gadu - free talking 
 Summary(pl):	GNU Gadu - wolne gadanie 
 Group:		Applications/Communications
-Group(de):	Applikationen/Kommunikation
-Group(pl):	Aplikacje/Komunikacja
 Prereq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
 
@@ -61,8 +55,6 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla X11.
 Summary:	GNU Gadu - free talking - GNOME version
 Summary(pl):	GNU Gadu - wolne gadanie - wersja dla GNOME
 Group:		Applications/Communications
-Group(de):	Applikationen/Kommunikation
-Group(pl):	Aplikacje/Komunikacja
 Prereq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
 
@@ -76,8 +68,6 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla GNOME.
 Summary:	GNU Gadu - free talking - GNOME dockable version
 Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla GNOME
 Group:		Applications/Communications
-Group(de):	Applikationen/Kommunikation
-Group(pl):	Aplikacje/Komunikacja
 Prereq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
 
@@ -91,8 +81,6 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla gnome.
 Summary:	GNU Gadu - free talking - WindowMaker dockable version.
 Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla WindowMaker'a.
 Group:		Applications/Communications
-Group(de):	Applikationen/Kommunikation
-Group(pl):	Aplikacje/Komunikacja
 Prereq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
 
@@ -106,8 +94,6 @@ Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla WindowMaker'a.
 Summary:	GNU Gadu - free talking - KDE version.
 Summary(pl):	GNU Gadu - wolne gadanie - wersja dla KDE.
 Group:		Applications/Communications
-Group(de):	Applikationen/Kommunikation
-Group(pl):	Aplikacje/Komunikacja
 Prereq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
 
