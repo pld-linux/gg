@@ -23,7 +23,7 @@ Release:	1
 Epoch:		5
 License:	GPL
 Group:		Applications/Communications
-Source0:	ftp://ftp.slackware.pl/gg/%{name}-%{version}.tar.gz
+Source0:	ftp://ftp.slackware.pl/pub/gg/%{name}-%{version}.tar.gz
 Source1:	%{name}.png
 Icon:		gg.xpm
 URL:		http://gadu.gnu.pl
