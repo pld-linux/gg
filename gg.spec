@@ -37,11 +37,10 @@ Group(de):	Applikationen/Kommunikation
 Group(pl):	Aplikacje/Komunikacja
 Obsoletes:	gg =< 0.2.0
 
-
 %description common
 Gadu-Gadu client released on GNU/GPL.
 
-%description -l pl common
+%description common -l pl
 Klient Gadu-Gadu na licencji GNU/GPL.
 
 %package X11
@@ -56,7 +55,7 @@ Provides:	gg = %{epoch}:%{version}-%{release}
 %description X11
 Gadu-Gadu client released on GNU/GPL.
 
-%description -l pl X11
+%description X11 -l pl
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla X11.
 
 %package gnome
@@ -71,7 +70,7 @@ Provides:	gg = %{epoch}:%{version}-%{release}
 %description gnome
 Gadu-Gadu client released on GNU/GPL. GNOME version
 
-%description -l pl gnome
+%description gnome -l pl
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla GNOME.
 
 %package gnome-applet
@@ -86,11 +85,11 @@ Provides:	gg = %{epoch}:%{version}-%{release}
 %description gnome-applet
 Gadu-Gadu client released on GNU/GPL. GNOME dockable version
 
-%description -l pl gnome-applet
+%description gnome-applet -l pl
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla gnome.
 
 %prep
-%setup  -q -n %{name}-%{version}
+%setup -q -n %{name}-%{version}
 %patch0 -p1
 
 %build
@@ -99,13 +98,13 @@ LDFLAGS=" -L%{_libdir} %{rpmldflags}"
 	--enable-gnome \
 	--enable-panel
 %{__make}
-mv src/gg src/gg_applet
+mv -f src/gg src/gg_applet
 %{__make} clean
 
 %configure \
 	--enable-gnome 
 %{__make}
-mv src/gg src/gg_gnome
+mv -f src/gg src/gg_gnome
 %{__make} clean
 
 %configure
@@ -119,32 +118,32 @@ install -d $RPM_BUILD_ROOT{%{_applnkdir}/Network/Communications,%{_pixmapsdir},%
 install src/gg_applet $RPM_BUILD_ROOT%{_bindir}
 install src/gg_gnome $RPM_BUILD_ROOT%{_bindir}
 
-cat src/GnuGadu.desktop | sed -e 's/xpm$/png/' > $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu.desktop
-cat src/GnuGadu.desktop | sed -e 's/xpm$/png/' | sed -e 's/Exec=gg/Exec=gg_applet\ --activate-goad-server=gg/' > $RPM_BUILD_ROOT%{_datadir}/applets/Network/GnuGadu.desktop
+sed -e 's/xpm$/png/' src/GnuGadu.desktop \
+	> $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu.desktop
+sed -e 's/xpm$/png/' -e 's/Exec=gg/Exec=gg_applet\ --activate-goad-server=gg/' \
+	src/GnuGadu.desktop > $RPM_BUILD_ROOT%{_datadir}/applets/Network/GnuGadu.desktop
 
 install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
 
 gzip -9nf README ChangeLog TODO
 
 %clean
-#rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 %post gnome
 if [ ! -e /usr/X11R6/bin/gg ]; then
-      ln -s /usr/X11R6/bin/gg_gnome /usr/X11R6/bin/gg
+	ln -sf /usr/X11R6/bin/gg_gnome /usr/X11R6/bin/gg
 fi
 
 %post gnome-applet
 if [ ! -e /usr/X11R6/bin/gg ]; then
-      ln -s /usr/X11R6/bin/gg_applet /usr/X11R6/bin/gg
+	ln -sf /usr/X11R6/bin/gg_applet /usr/X11R6/bin/gg
 fi
-
 
 %postun
 if [ -L /usr/X11R6/bin/gg ]; then
-      rm -f /usr/X11R6/bin/gg
+	rm -f /usr/X11R6/bin/gg
 fi
-
 
 %files common
 %defattr(644,root,root,755)
