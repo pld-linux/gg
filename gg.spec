@@ -2,7 +2,7 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.2.2
-Release:	1.pre2
+Release:	2.pre2
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
@@ -87,6 +87,36 @@ Gadu-Gadu client released on GNU/GPL. GNOME dockable version
 %description gnome-applet -l pl
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla gnome.
 
+%package wm-applet
+Summary:	GNU Gadu - free talking - WindowMaker dockable version.
+Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla WindowMaker'a.
+Group:		Applications/Communications
+Group(de):	Applikationen/Kommunikation
+Group(pl):	Aplikacje/Komunikacja
+Prereq:		%{name}-common = %{epoch}:%{version}
+Provides:	gg = %{epoch}:%{version}-%{release}
+
+%description wm-applet
+Gadu-Gadu client released on GNU/GPL. WindowMaker dockable version
+
+%description wm-applet -l pl
+Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla WindowMaker'a.
+
+%package kde
+Summary:	GNU Gadu - free talking - KDE version.
+Summary(pl):	GNU Gadu - wolne gadanie - wersja dla KDE.
+Group:		Applications/Communications
+Group(de):	Applikationen/Kommunikation
+Group(pl):	Aplikacje/Komunikacja
+Prereq:		%{name}-common = %{epoch}:%{version}
+Provides:	gg = %{epoch}:%{version}-%{release}
+
+%description kde
+Gadu-Gadu client released on GNU/GPL. KDE version
+
+%description kde -l pl
+Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla KDE.
+
 %prep
 %setup -q -n %{name}-%{version}pre2
 
@@ -105,6 +135,18 @@ mv -f src/gg src/gg_applet
 mv -f src/gg src/gg_gnome
 %{__make} clean
 
+%configure \
+	--enable-dockapp
+%{__make}
+mv -f src/gg src/gg_wm
+%{__make} clean
+
+%configure \
+	--enable-docklet
+%{__make}
+mv -f src/gg src/gg_kde
+%{__make} clean
+
 %configure
 %{__make}
 
@@ -115,6 +157,8 @@ install -d $RPM_BUILD_ROOT{%{_applnkdir}/Network/Communications,%{_pixmapsdir},%
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 install src/gg_applet $RPM_BUILD_ROOT%{_bindir}
 install src/gg_gnome $RPM_BUILD_ROOT%{_bindir}
+install src/gg_wm $RPM_BUILD_ROOT%{_bindir}
+install src/gg_kde $RPM_BUILD_ROOT%{_bindir}
 
 sed -e 's/xpm$/png/' src/GnuGadu.desktop \
 	> $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu.desktop
@@ -138,6 +182,16 @@ fi
 %post gnome-applet
 if [ ! -e /usr/X11R6/bin/gg ]; then
 	ln -sf /usr/X11R6/bin/gg_applet /usr/X11R6/bin/gg
+fi
+
+%post wm-applet
+if [ ! -e /usr/X11R6/bin/gg ]; then
+	ln -sf /usr/X11R6/bin/gg_wm /usr/X11R6/bin/gg
+fi
+
+%post kde
+if [ ! -e /usr/X11R6/bin/gg ]; then
+	ln -sf /usr/X11R6/bin/gg_kde /usr/X11R6/bin/gg
 fi
 
 %postun
@@ -166,3 +220,13 @@ fi
 %attr(755,root,root) %{_bindir}/gg_applet
 %attr(755,root,root) %{_datadir}/applets/Network/GnuGadu.desktop
 %attr(755,root,root) %{_sysconfdir}/CORBA/servers/GnuGadu.gnorba
+
+%files wm-applet
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/gg_wm
+%attr(755,root,root) %{_datadir}/applets/Network/GnuGadu.desktop
+
+%files kde
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/gg_kde
+%attr(755,root,root) %{_datadir}/applets/Network/GnuGadu.desktop
