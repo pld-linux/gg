@@ -2,7 +2,7 @@ Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.2.0
-Release:	5
+Release:	6
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
@@ -20,6 +20,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_prefix		/usr/X11R6
 %define		_mandir		%{_prefix}/man
+%define		_sysconfdir	/etc/X11/GNOME
 
 %description
 Gadu-Gadu client released on GNU/GPL.
@@ -43,8 +44,8 @@ Gadu-Gadu client released on GNU/GPL.
 Klient Gadu-Gadu na licencji GNU/GPL.
 
 %package X11
-Summary:	GNU Gadu - free talking - gnome dockable
-Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla gnome
+Summary:	GNU Gadu - free talking 
+Summary(pl):	GNU Gadu - wolne gadanie 
 Group:		Applications/Communications
 Group(de):	Applikationen/Kommunikation
 Group(pl):	Aplikacje/Komunikacja
@@ -52,7 +53,7 @@ Prereq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
 
 %description X11
-Gadu-Gadu client released on GNU/GPL. 
+Gadu-Gadu client released on GNU/GPL.
 
 %description -l pl X11
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla X11.
@@ -116,8 +117,8 @@ install -d $RPM_BUILD_ROOT{%{_applnkdir}/Network/Communications,%{_pixmapsdir},%
 install src/gg_applet $RPM_BUILD_ROOT%{_bindir}
 install src/gg_gnome $RPM_BUILD_ROOT%{_bindir}
 
-cp -f src/GnuGadu.desktop $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/
-cat src/GnuGadu.desktop | sed -e 's/Exec=gg/Exec=gg_applet\ --activate-goad-server=gg/' > $RPM_BUILD_ROOT%{_datadir}/applets/Network/GnuGadu.desktop
+cat src/GnuGadu.desktop | sed -e 's/xpm$/png/' > $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/GnuGadu.desktop
+cat src/GnuGadu.desktop | sed -e 's/xpm$/png/' | sed -e 's/Exec=gg/Exec=gg_applet\ --activate-goad-server=gg/' > $RPM_BUILD_ROOT%{_datadir}/applets/Network/GnuGadu.desktop
 
 install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
 
@@ -125,6 +126,23 @@ gzip -9nf README ChangeLog TODO
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post gnome
+if [ ! -e /usr/X11R6/bin/gg ]; then
+      ln -s /usr/X11R6/bin/gg_gnome /usr/X11R6/bin/gg
+fi
+
+%post gnome-applet
+if [ ! -e /usr/X11R6/bin/gg ]; then
+      ln -s /usr/X11R6/bin/gg_applet /usr/X11R6/bin/gg
+fi
+
+
+%postun
+if [ -L /usr/X11R6/bin/gg ]; then
+      rm -f /usr/X11R6/bin/gg
+fi
+
 
 %files common
 %defattr(644,root,root,755)
@@ -146,3 +164,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gg_applet
 %attr(755,root,root) %{_datadir}/applets/Network/GnuGadu.desktop
+%attr(755,root,root) %{_sysconfdir}/CORBA/servers/GnuGadu.gnorba
