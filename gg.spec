@@ -8,12 +8,12 @@
 # _without_sound
 
 # This looks like overkill but some day we might have *everything* bconded :)
-%{!?_without_gnome: 		%define _need_gnome	1}
-%{!?_without_gnome:         %define _need_esd   1}
-%{!?_without_gnome_applet:	%define	_need_gnome	1}
-%{!?_without_gnome_applet:  %define _nees_esd   1}
-%{!?_without_kde:			%define _need_arts	1}
-%{!?_without_wm_applet:		%define _need_esd	1}
+%{!?_without_gnome:%define _need_gnome	1}
+%{!?_without_gnome:%define _need_esd   1}
+%{!?_without_gnome_applet:%define	_need_gnome	1}
+%{!?_without_gnome_applet:%define _nees_esd   1}
+%{!?_without_kde:%define _need_arts	1}
+%{!?_without_wm_applet:%define _need_esd	1}
 
 Summary:	GNU Gadu - free talking
 Summary(pl):	GNU Gadu - wolne gadanie
@@ -23,7 +23,7 @@ Release:	4
 Epoch:		4
 License:	GPL
 Group:		Applications/Communications
-Source0:	http://gadu.gnu.pl/gg-1.0.0pre1.tar.gz
+Source0:	http://gadu.gnu.pl/%{name}-%{version}.tar.gz
 Source1:	%{name}.png
 Icon:		gg.xpm
 URL:		http://gadu.gnu.pl
@@ -33,7 +33,7 @@ URL:		http://gadu.gnu.pl
 %endif
 %{?_need_gnome:BuildRequires:	gnome-libs-devel}
 %{?_need_gnome:BuildRequires:	gnome-core-devel}
-BuildRequires:					gtk+-devel > 1.2.8
+BuildRequires:	gtk+-devel > 1.2.8
 
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
