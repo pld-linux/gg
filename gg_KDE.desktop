@@ -1,11 +1,12 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=KDE GNU Gadu
 Name[pl]=KDE GNU Gadu
 Comment=GNU Gadu free Gadu-Gadu(tm) client. KDE version.
 Comment[pl]=GNU Gadu - wolne gadanie. Wersja KDE.
 Exec=gg_kde
 Icon=gg.xpm
-Terminal=0
+Terminal=false
 Type=Application
 
 
