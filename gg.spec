@@ -1,7 +1,7 @@
 Summary:	GNU Gadu - wolne gadanie
 Summary(pl):	GNU Gadu - wolne gadanie
 Name:		gg
-Version:	0.1.pre5
+Version:	0.1.pre6
 Release:	1
 License:	GPL
 Group:          Applications/Communications
@@ -38,7 +38,7 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_applnkdir}/Network/Communications/gg.deskto
 gzip -9nf README ChangeLog
 
 %clean
-#rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
