@@ -12,8 +12,8 @@ Icon:		gg.xpm
 URL:		http://netkrab.slackware.pl/gg/
 BuildRequires:	gtk+-devel > 1.2.8
 BuildRequires:	esound-devel > 0.2.7
-BuildRequires:	gnome-libs-devel 
-BuildRequires:	gnome-core-devel 
+BuildRequires:	gnome-libs-devel
+BuildRequires:	gnome-core-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_prefix		/usr/X11R6
@@ -39,8 +39,8 @@ Gadu-Gadu client released on GNU/GPL.
 Klient Gadu-Gadu na licencji GNU/GPL.
 
 %package X11
-Summary:	GNU Gadu - free talking 
-Summary(pl):	GNU Gadu - wolne gadanie 
+Summary:	GNU Gadu - free talking
+Summary(pl):	GNU Gadu - wolne gadanie
 Group:		Applications/Communications
 Prereq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
@@ -88,7 +88,8 @@ Provides:	gg = %{epoch}:%{version}-%{release}
 Gadu-Gadu client released on GNU/GPL. WindowMaker dockable version
 
 %description wm-applet -l pl
-Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla WindowMaker'a.
+Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla
+WindowMaker'a.
 
 %package kde
 Summary:	GNU Gadu - free talking - KDE version.
@@ -116,7 +117,7 @@ mv -f src/gg src/gg_applet
 %{__make} clean
 
 %configure \
-	--enable-gnome 
+	--enable-gnome
 %{__make}
 mv -f src/gg src/gg_gnome
 %{__make} clean
