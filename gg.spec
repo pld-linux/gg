@@ -15,6 +15,8 @@ Icon:		gg.xpm
 URL:		http://netkrab.slackware.pl/gg/
 BuildRequires:	gtk+-devel > 1.2.8
 BuildRequires:	esound-devel > 0.2.7
+BuildRequires:  gnome-libs-devel 
+BuildRequires:  gnome-core-devel 
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_prefix		/usr/X11R6
