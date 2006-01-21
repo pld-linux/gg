@@ -29,7 +29,6 @@ Source2:	%{name}_gnome.desktop
 Source3:	%{name}_WM_applet.desktop
 Source4:	%{name}_KDE.desktop
 Patch0:		http://piorun.ds.pg.gda.pl/~blues/patches/gg-debian_fixes.patch
-Icon:		gg.xpm
 URL:		http://gadu.gnu.pl/
 %{?need_arts:BuildRequires:	arts-devel}
 %if %{with sound}
