@@ -19,7 +19,7 @@
 
 
 Summary:	GNU Gadu - free talking
-Summary(pl):	GNU Gadu - wolne gadanie
+Summary(pl.UTF-8):   GNU Gadu - wolne gadanie
 Name:		gg
 Version:	0.2.3
 Release:	0.1pre%{snapshot}
@@ -49,24 +49,24 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 Gadu-Gadu client released on GNU/GPL.
 
-%description -l pl
+%description -l pl.UTF-8
 Klient Gadu-Gadu na licencji GNU/GPL.
 
 %package common
 Summary:	GNU Gadu - free talking - common files
-Summary(pl):	GNU Gadu - wolne gadanie - wspólne pliki
+Summary(pl.UTF-8):   GNU Gadu - wolne gadanie - wspÃ³lne pliki
 Group:		Applications/Communications
 Obsoletes:	gg =< 0.2.0
 
 %description common
 Gadu-Gadu client released on GNU/GPL.
 
-%description common -l pl
+%description common -l pl.UTF-8
 Klient Gadu-Gadu na licencji GNU/GPL.
 
 %package X11
 Summary:	GNU Gadu - free talking
-Summary(pl):	GNU Gadu - wolne gadanie
+Summary(pl.UTF-8):   GNU Gadu - wolne gadanie
 Group:		Applications/Communications
 PreReq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
@@ -74,12 +74,12 @@ Provides:	gg = %{epoch}:%{version}-%{release}
 %description X11
 Gadu-Gadu client released on GNU/GPL.
 
-%description X11 -l pl
+%description X11 -l pl.UTF-8
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla X11.
 
 %package gnome
 Summary:	GNU Gadu - free talking - GNOME version
-Summary(pl):	GNU Gadu - wolne gadanie - wersja dla GNOME
+Summary(pl.UTF-8):   GNU Gadu - wolne gadanie - wersja dla GNOME
 Group:		Applications/Communications
 PreReq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
@@ -87,12 +87,12 @@ Provides:	gg = %{epoch}:%{version}-%{release}
 %description gnome
 Gadu-Gadu client released on GNU/GPL. GNOME version
 
-%description gnome -l pl
+%description gnome -l pl.UTF-8
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla GNOME.
 
 %package gnome-applet
 Summary:	GNU Gadu - free talking - GNOME dockable version
-Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla GNOME
+Summary(pl.UTF-8):   GNU Gadu - wolne gadanie - wersja dokowalna dla GNOME
 Group:		Applications/Communications
 PreReq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
@@ -100,12 +100,12 @@ Provides:	gg = %{epoch}:%{version}-%{release}
 %description gnome-applet
 Gadu-Gadu client released on GNU/GPL. GNOME dockable version
 
-%description gnome-applet -l pl
+%description gnome-applet -l pl.UTF-8
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla gnome.
 
 %package wm-applet
 Summary:	GNU Gadu - free talking - WindowMaker dockable version.
-Summary(pl):	GNU Gadu - wolne gadanie - wersja dokowalna dla WindowMaker'a.
+Summary(pl.UTF-8):   GNU Gadu - wolne gadanie - wersja dokowalna dla WindowMaker'a.
 Group:		Applications/Communications
 PreReq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
@@ -113,13 +113,13 @@ Provides:	gg = %{epoch}:%{version}-%{release}
 %description wm-applet
 Gadu-Gadu client released on GNU/GPL. WindowMaker dockable version
 
-%description wm-applet -l pl
+%description wm-applet -l pl.UTF-8
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dokowalna dla
 WindowMaker'a.
 
 %package kde
 Summary:	GNU Gadu - free talking - KDE version.
-Summary(pl):	GNU Gadu - wolne gadanie - wersja dla KDE.
+Summary(pl.UTF-8):   GNU Gadu - wolne gadanie - wersja dla KDE.
 Group:		Applications/Communications
 PreReq:		%{name}-common = %{epoch}:%{version}
 Provides:	gg = %{epoch}:%{version}-%{release}
@@ -127,7 +127,7 @@ Provides:	gg = %{epoch}:%{version}-%{release}
 %description kde
 Gadu-Gadu client released on GNU/GPL. KDE version
 
-%description kde -l pl
+%description kde -l pl.UTF-8
 Klient Gadu-Gadu na licencji GNU/GPL. Wersja dla KDE.
 
 %prep
