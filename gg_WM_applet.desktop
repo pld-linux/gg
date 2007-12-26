@@ -1,11 +1,10 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=WM GNU Gadu
 Name[pl]=WM GNU Gadu
 Comment=GNU Gadu free Gadu-Gadu(tm) client. WM version.
 Comment[pl]=GNU Gadu - wolne gadanie. Wersja WM.
 Exec=gg_wm
-Icon=gg.xpm
+Icon=gg
 Terminal=false
 Type=Application
 # vi: encoding=utf-8
